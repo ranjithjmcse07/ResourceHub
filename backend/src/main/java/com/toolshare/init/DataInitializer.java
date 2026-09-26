@@ -8,25 +8,27 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.core.io.ClassPathResource;
-import org.springframework.jdbc.datasource.init.ResourceDatabasePopulator;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
-import javax.sql.DataSource;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
 import java.math.BigDecimal;
+import java.nio.charset.StandardCharsets;
 
 @Component
 public class DataInitializer implements CommandLineRunner {
 
     private static final Logger log = LoggerFactory.getLogger(DataInitializer.class);
 
-    private final DataSource dataSource;
+    private final JdbcTemplate jdbcTemplate;
     private final UserDao userDao;
     private final ToolDao toolDao;
     private final PasswordEncoder passwordEncoder;
 
-    public DataInitializer(DataSource dataSource, UserDao userDao, ToolDao toolDao, PasswordEncoder passwordEncoder) {
-        this.dataSource = dataSource;
+    public DataInitializer(JdbcTemplate jdbcTemplate, UserDao userDao, ToolDao toolDao, PasswordEncoder passwordEncoder) {
+        this.jdbcTemplate = jdbcTemplate;
         this.userDao = userDao;
         this.toolDao = toolDao;
         this.passwordEncoder = passwordEncoder;
@@ -34,21 +36,109 @@ public class DataInitializer implements CommandLineRunner {
 
     @Override
     public void run(String... args) {
-        log.info("Checking database schema and initialization...");
+        log.info("Checking database tables and initialization...");
 
-        // 1. Ensure database schema is created before running any queries
-        try {
-            ResourceDatabasePopulator populator = new ResourceDatabasePopulator();
-            populator.addScript(new ClassPathResource("schema.sql"));
-            populator.setContinueOnError(true);
-            populator.setIgnoreFailedDrops(true);
-            populator.execute(dataSource);
-            log.info("Database schema checked/created successfully.");
-        } catch (Exception e) {
-            log.warn("Notice during schema setup: {}", e.getMessage());
-        }
+        // 1. Ensure all tables exist (TiDB and MySQL Cloud compatible DDL)
+        createTablesIfNotExist();
 
         // 2. Seed demo users if empty
+        User lender = seedUsersIfEmpty();
+
+        // 3. Seed demo tools if empty
+        seedToolsIfEmpty(lender);
+    }
+
+    private void createTablesIfNotExist() {
+        try {
+            log.info("Executing table creation checks...");
+
+            jdbcTemplate.execute("""
+                CREATE TABLE IF NOT EXISTS users (
+                    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+                    full_name VARCHAR(100) NOT NULL,
+                    username VARCHAR(50) NOT NULL UNIQUE,
+                    email VARCHAR(100) NOT NULL UNIQUE,
+                    mobile VARCHAR(20) NOT NULL,
+                    password VARCHAR(255) NOT NULL,
+                    role VARCHAR(20) NOT NULL,
+                    company_name VARCHAR(100) DEFAULT NULL,
+                    address TEXT DEFAULT NULL,
+                    active BOOLEAN DEFAULT TRUE,
+                    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+                )
+            """);
+
+            jdbcTemplate.execute("""
+                CREATE TABLE IF NOT EXISTS tools (
+                    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+                    lender_id BIGINT NOT NULL,
+                    tool_name VARCHAR(150) NOT NULL,
+                    category VARCHAR(50) NOT NULL,
+                    description TEXT NOT NULL,
+                    tool_condition VARCHAR(30) DEFAULT 'Good',
+                    location VARCHAR(100) NOT NULL,
+                    hourly_rate DECIMAL(10, 2) NOT NULL DEFAULT 0.00,
+                    daily_rate DECIMAL(10, 2) NOT NULL DEFAULT 0.00,
+                    image_url VARCHAR(500) DEFAULT NULL,
+                    availability_status VARCHAR(30) DEFAULT 'AVAILABLE',
+                    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+                )
+            """);
+
+            jdbcTemplate.execute("""
+                CREATE TABLE IF NOT EXISTS borrow_requests (
+                    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+                    tool_id BIGINT NOT NULL,
+                    borrower_id BIGINT NOT NULL,
+                    rental_type VARCHAR(20) NOT NULL DEFAULT 'DAILY',
+                    duration INT NOT NULL DEFAULT 1,
+                    start_time DATETIME NOT NULL,
+                    expected_return_time DATETIME NOT NULL,
+                    actual_return_time DATETIME DEFAULT NULL,
+                    total_amount DECIMAL(10, 2) NOT NULL DEFAULT 0.00,
+                    fine_amount DECIMAL(10, 2) NOT NULL DEFAULT 0.00,
+                    status VARCHAR(30) DEFAULT 'PENDING',
+                    requested_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                    approved_at DATETIME DEFAULT NULL,
+                    returned_at DATETIME DEFAULT NULL,
+                    notes TEXT DEFAULT NULL
+                )
+            """);
+
+            jdbcTemplate.execute("""
+                CREATE TABLE IF NOT EXISTS reviews (
+                    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+                    tool_id BIGINT NOT NULL,
+                    borrower_id BIGINT NOT NULL,
+                    borrow_request_id BIGINT NOT NULL,
+                    rating INT NOT NULL,
+                    comment TEXT NOT NULL,
+                    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+                )
+            """);
+
+            jdbcTemplate.execute("""
+                CREATE TABLE IF NOT EXISTS suggestions (
+                    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+                    user_id BIGINT NOT NULL,
+                    subject VARCHAR(150) NOT NULL,
+                    message TEXT NOT NULL,
+                    status VARCHAR(30) DEFAULT 'OPEN',
+                    admin_response TEXT DEFAULT NULL,
+                    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+                )
+            """);
+
+            log.info("All 5 database tables verified/created successfully.");
+        } catch (Exception e) {
+            log.error("Notice during table creation: {}", e.getMessage());
+        }
+    }
+
+    private User seedUsersIfEmpty() {
         User lender = null;
         try {
             if (!userDao.existsByUsername("admin")) {
@@ -97,21 +187,45 @@ public class DataInitializer implements CommandLineRunner {
         } catch (Exception e) {
             log.warn("Notice during user seeding: {}", e.getMessage());
         }
+        return lender;
+    }
 
-        // 3. Seed demo tools if empty
+    private void seedToolsIfEmpty(User lender) {
         try {
             if (toolDao.countAll() == 0) {
-                log.info("Seeding tools into database...");
+                log.info("Tools table is empty, seeding catalog...");
+                boolean seededFromFile = false;
+
                 try {
-                    ResourceDatabasePopulator dataPopulator = new ResourceDatabasePopulator();
-                    dataPopulator.addScript(new ClassPathResource("data.sql"));
-                    dataPopulator.setContinueOnError(true);
-                    dataPopulator.execute(dataSource);
-                    log.info("Tools seeded successfully from data.sql!");
-                } catch (Exception dataEx) {
-                    log.warn("data.sql execution note: {}, falling back to programmatic seed", dataEx.getMessage());
+                    ClassPathResource dataRes = new ClassPathResource("data.sql");
+                    if (dataRes.exists()) {
+                        try (BufferedReader reader = new BufferedReader(new InputStreamReader(dataRes.getInputStream(), StandardCharsets.UTF_8))) {
+                            String line;
+                            StringBuilder sql = new StringBuilder();
+                            while ((line = reader.readLine()) != null) {
+                                String trimmed = line.trim();
+                                if (trimmed.isEmpty() || trimmed.startsWith("--") || trimmed.startsWith("USE ")) continue;
+                                sql.append(line).append(" ");
+                                if (trimmed.endsWith(";")) {
+                                    String statement = sql.toString().trim();
+                                    if (statement.endsWith(";")) {
+                                        statement = statement.substring(0, statement.length() - 1);
+                                    }
+                                    jdbcTemplate.execute(statement);
+                                    sql.setLength(0);
+                                    seededFromFile = true;
+                                }
+                            }
+                        }
+                    }
+                } catch (Exception ex) {
+                    log.warn("data.sql seed note: {}, falling back to programmatic seed", ex.getMessage());
+                }
+
+                if (!seededFromFile || toolDao.countAll() == 0) {
                     seedFallbackTools(lender);
                 }
+                log.info("Seeding complete. Total tools in database: {}", toolDao.countAll());
             }
         } catch (Exception e) {
             log.warn("Notice during tools seeding: {}", e.getMessage());
@@ -119,7 +233,10 @@ public class DataInitializer implements CommandLineRunner {
     }
 
     private void seedFallbackTools(User lender) {
-        if (lender == null) return;
+        if (lender == null) {
+            lender = userDao.findByUsername("lender1").orElse(null);
+            if (lender == null) return;
+        }
         try {
             toolDao.createTool(new Tool(null, lender.getId(),
                     "Bosch Professional 18V Cordless Hammer Drill",
