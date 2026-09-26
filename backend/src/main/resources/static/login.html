@@ -1,0 +1,1938 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sign In & Register | ResourceHub Equipment Circulation</title>
+  <link rel="icon" type="image/png" href="images/Logo-circle.png">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary-navy: #0b1120;
+      --primary-slate: #0f172a;
+      --accent-gold: #f59e0b;
+      --accent-amber: #ff9900;
+      --accent-gradient: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+      --accent-gradient-hover: linear-gradient(135deg, #fbbf24 0%, #b45309 100%);
+      --surface-glass: rgba(255, 255, 255, 0.85);
+      --card-border: #e2e8f0;
+      --text-dark: #0f172a;
+      --text-body: #475569;
+      --text-sub: #64748b;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body.auth-screen {
+      min-height: 100vh;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background: #f8fafc;
+      color: var(--text-dark);
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* Top Brand Minimal Bar */
+    .auth-top-bar {
+      padding: 16px 32px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: #ffffff;
+      border-bottom: 1px solid #e2e8f0;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .auth-brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      text-decoration: none;
+      color: #0f172a;
+    }
+
+    .auth-brand-img {
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      object-fit: cover;
+      display: block;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+      border: 2px solid #e2e8f0;
+      background: #ffffff;
+      transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), border-color 0.2s ease;
+    }
+
+    .auth-brand:hover .auth-brand-img {
+      transform: scale(1.1) rotate(15deg);
+      border-color: #16a34a;
+    }
+
+    .auth-brand-logo-mark {
+      width: 38px;
+      height: 38px;
+      background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #16a34a;
+      font-size: 1.4rem;
+      font-weight: 800;
+      box-shadow: 0 4px 12px rgba(22, 163, 74, 0.25);
+    }
+
+    .auth-brand-text {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 1.35rem;
+      font-weight: 800;
+      letter-spacing: -0.5px;
+      color: #0f172a;
+    }
+
+    .auth-brand-text span {
+      color: #16a34a;
+    }
+
+    .showcase-logo-badge {
+      margin-bottom: 24px;
+      display: inline-block;
+      background: rgba(255, 255, 255, 0.98);
+      padding: 10px 18px;
+      border-radius: 14px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+      border: 1px solid rgba(255, 255, 255, 0.4);
+      transition: transform 0.3s ease;
+    }
+
+    .showcase-logo-badge:hover {
+      transform: translateY(-2px);
+    }
+
+    .showcase-brand-image {
+      max-width: 200px;
+      height: auto;
+      display: block;
+      border-radius: 6px;
+    }
+
+    .auth-nav-link {
+      color: #64748b;
+      font-size: 0.88rem;
+      font-weight: 600;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 12px;
+      border-radius: 6px;
+      transition: all 0.2s ease;
+    }
+
+    .auth-nav-link:hover {
+      color: #0f172a;
+      background: #f1f5f9;
+    }
+
+    /* Main Split Layout */
+    .auth-split-wrapper {
+      display: grid;
+      grid-template-columns: 46% 54%;
+      flex: 1;
+      min-height: calc(100vh - 71px);
+    }
+
+    /* Left Showcase Panel (Hero Canvas) */
+    .auth-showcase-panel {
+      background: linear-gradient(145deg, #0b1120 0%, #111827 50%, #0a0f1d 100%);
+      color: #ffffff;
+      padding: 60px 48px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      position: relative;
+      overflow: hidden;
+      border-right: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    /* Ambient Glowing orbs */
+    .auth-showcase-panel::before {
+      content: "";
+      position: absolute;
+      width: 450px;
+      height: 450px;
+      top: -100px;
+      left: -100px;
+      background: radial-gradient(circle, rgba(245, 158, 11, 0.18) 0%, rgba(245, 158, 11, 0) 70%);
+      border-radius: 50%;
+      pointer-events: none;
+    }
+
+    .auth-showcase-panel::after {
+      content: "";
+      position: absolute;
+      width: 400px;
+      height: 400px;
+      bottom: -60px;
+      right: -60px;
+      background: radial-gradient(circle, rgba(14, 165, 233, 0.15) 0%, rgba(14, 165, 233, 0) 70%);
+      border-radius: 50%;
+      pointer-events: none;
+    }
+
+    .showcase-content {
+      position: relative;
+      z-index: 2;
+    }
+
+    .showcase-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(245, 158, 11, 0.12);
+      border: 1px solid rgba(245, 158, 11, 0.3);
+      padding: 6px 14px;
+      border-radius: 30px;
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: #fbbf24;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 24px;
+      backdrop-filter: blur(8px);
+    }
+
+    .showcase-badge .pulse-dot {
+      width: 8px;
+      height: 8px;
+      background: #fbbf24;
+      border-radius: 50%;
+      box-shadow: 0 0 10px #fbbf24;
+      animation: pulseAnimation 2s infinite;
+    }
+
+    @keyframes pulseAnimation {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.4; transform: scale(0.85); }
+    }
+
+    .showcase-title {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 2.35rem;
+      font-weight: 800;
+      line-height: 1.2;
+      margin-bottom: 16px;
+      letter-spacing: -0.8px;
+    }
+
+    .showcase-title span.gold {
+      background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .showcase-desc {
+      font-size: 1rem;
+      color: #94a3b8;
+      line-height: 1.6;
+      margin-bottom: 36px;
+      max-width: 480px;
+    }
+
+    /* Value Pillars */
+    .value-pillars {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      margin-bottom: 40px;
+    }
+
+    .pillar-card {
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 12px;
+      padding: 16px 20px;
+      display: flex;
+      gap: 16px;
+      align-items: flex-start;
+      backdrop-filter: blur(10px);
+      transition: all 0.3s ease;
+    }
+
+    .pillar-card:hover {
+      background: rgba(255, 255, 255, 0.07);
+      border-color: rgba(245, 158, 11, 0.3);
+      transform: translateX(4px);
+    }
+
+    .pillar-icon-box {
+      width: 42px;
+      height: 42px;
+      background: rgba(245, 158, 11, 0.15);
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.25rem;
+      flex-shrink: 0;
+      color: #fbbf24;
+    }
+
+    .pillar-info h4 {
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: #f8fafc;
+      margin-bottom: 4px;
+    }
+
+    .pillar-info p {
+      font-size: 0.82rem;
+      color: #94a3b8;
+      line-height: 1.45;
+    }
+
+    /* Live Trust Metrics Bar */
+    .showcase-stats-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
+      padding-top: 24px;
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+      position: relative;
+      z-index: 2;
+    }
+
+    .stat-pill {
+      text-align: left;
+    }
+
+    .stat-pill .num {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 1.3rem;
+      font-weight: 800;
+      color: #fbbf24;
+      line-height: 1.1;
+    }
+
+    .stat-pill .label {
+      font-size: 0.72rem;
+      color: #94a3b8;
+      margin-top: 4px;
+      font-weight: 500;
+    }
+
+    /* Right Form Panel */
+    .auth-form-panel {
+      padding: 40px 50px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      background: #f8fafc;
+      overflow-y: auto;
+    }
+
+    .auth-card-inner {
+      width: 100%;
+      max-width: 520px;
+      background: #ffffff;
+      border: 1px solid #e2e8f0;
+      border-radius: 16px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05), 0 1px 3px rgba(0, 0, 0, 0.02);
+      padding: 36px 32px;
+      position: relative;
+      transition: all 0.3s ease;
+    }
+
+    /* Dual Switcher Pill Bar */
+    .auth-pill-bar {
+      display: flex;
+      background: #f1f5f9;
+      padding: 5px;
+      border-radius: 12px;
+      margin-bottom: 28px;
+      border: 1px solid #e2e8f0;
+      position: relative;
+    }
+
+    .auth-pill-tab {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 11px 16px;
+      border-radius: 8px;
+      border: none;
+      background: transparent;
+      color: #64748b;
+      font-size: 0.92rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .auth-pill-tab:hover {
+      color: #0f172a;
+    }
+
+    .auth-pill-tab.active {
+      background: #ffffff;
+      color: #0f172a;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    }
+
+    .auth-pill-tab .pill-badge {
+      font-size: 0.7rem;
+      padding: 2px 7px;
+      border-radius: 20px;
+      background: #e2e8f0;
+      color: #475569;
+      font-weight: 700;
+    }
+
+    .auth-pill-tab.active .pill-badge {
+      background: #fef3c7;
+      color: #b45309;
+    }
+
+    /* Typography & Headers */
+    .form-header-group {
+      margin-bottom: 24px;
+    }
+
+    .form-header-group h2 {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 1.55rem;
+      font-weight: 800;
+      color: #0f172a;
+      letter-spacing: -0.4px;
+      margin-bottom: 6px;
+    }
+
+    .form-header-group p {
+      font-size: 0.88rem;
+      color: #64748b;
+      line-height: 1.45;
+    }
+
+    /* Role Selection Grid */
+    .role-selection-box {
+      margin-bottom: 20px;
+    }
+
+    .role-selection-label {
+      font-size: 0.84rem;
+      font-weight: 700;
+      color: #1e293b;
+      margin-bottom: 8px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .role-cards-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+
+    .role-option-card {
+      border: 2px solid #e2e8f0;
+      border-radius: 12px;
+      padding: 14px 12px;
+      background: #ffffff;
+      cursor: pointer;
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      position: relative;
+    }
+
+    .role-option-card:hover {
+      border-color: #cbd5e1;
+      background: #f8fafc;
+      transform: translateY(-2px);
+    }
+
+    .role-option-card.active {
+      border-color: #f59e0b;
+      background: #fffdf5;
+      box-shadow: 0 4px 14px rgba(245, 158, 11, 0.15);
+    }
+
+    .role-option-card .role-badge-check {
+      position: absolute;
+      top: 8px;
+      right: 8px;
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      background: #e2e8f0;
+      color: transparent;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 11px;
+      font-weight: 900;
+      transition: all 0.2s ease;
+    }
+
+    .role-option-card.active .role-badge-check {
+      background: #f59e0b;
+      color: #ffffff;
+    }
+
+    .role-option-card .role-icon-lg {
+      font-size: 1.6rem;
+      margin-bottom: 6px;
+    }
+
+    .role-option-card .role-card-name {
+      font-weight: 800;
+      font-size: 0.92rem;
+      color: #0f172a;
+      margin-bottom: 4px;
+    }
+
+    .role-option-card.active .role-card-name {
+      color: #b45309;
+    }
+
+    .role-option-card .role-card-tagline {
+      font-size: 0.72rem;
+      color: #64748b;
+      line-height: 1.3;
+    }
+
+    /* Form Inputs & Fields */
+    .field-wrap {
+      margin-bottom: 16px;
+    }
+
+    .field-label {
+      display: block;
+      font-size: 0.83rem;
+      font-weight: 600;
+      color: #334155;
+      margin-bottom: 6px;
+    }
+
+    .field-label .required-asterisk {
+      color: #dc2626;
+      margin-left: 2px;
+    }
+
+    .input-control-box {
+      position: relative;
+      display: flex;
+      align-items: center;
+    }
+
+    .input-icon-left {
+      position: absolute;
+      left: 12px;
+      color: #94a3b8;
+      pointer-events: none;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .modern-input {
+      width: 100%;
+      height: 44px;
+      padding: 10px 14px 10px 38px;
+      background: #ffffff;
+      border: 1.5px solid #cbd5e1;
+      border-radius: 8px;
+      font-family: inherit;
+      font-size: 0.92rem;
+      color: #0f172a;
+      transition: all 0.2s ease;
+    }
+
+    .modern-input:focus {
+      outline: none;
+      border-color: #f59e0b;
+      box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.15);
+      background: #ffffff;
+    }
+
+    .modern-input::placeholder {
+      color: #94a3b8;
+      font-size: 0.88rem;
+    }
+
+    .modern-select {
+      width: 100%;
+      height: 44px;
+      padding: 10px 14px 10px 38px;
+      background: #ffffff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%2364748b' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E") no-repeat right 14px center;
+      border: 1.5px solid #cbd5e1;
+      border-radius: 8px;
+      font-family: inherit;
+      font-size: 0.92rem;
+      color: #0f172a;
+      appearance: none;
+      transition: all 0.2s ease;
+      cursor: pointer;
+    }
+
+    .modern-select:focus {
+      outline: none;
+      border-color: #f59e0b;
+      box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.15);
+    }
+
+    /* Mobile Phone Input with Prefix Flag */
+    .mobile-input-group {
+      display: flex;
+      border: 1.5px solid #cbd5e1;
+      border-radius: 8px;
+      overflow: hidden;
+      transition: all 0.2s ease;
+      background: #ffffff;
+    }
+
+    .mobile-input-group:focus-within {
+      border-color: #f59e0b;
+      box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.15);
+    }
+
+    .mobile-country-badge {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      padding: 0 12px;
+      background: #f1f5f9;
+      border-right: 1px solid #cbd5e1;
+      color: #334155;
+      font-size: 0.85rem;
+      font-weight: 700;
+      user-select: none;
+    }
+
+    .mobile-input-control {
+      flex: 1;
+      height: 44px;
+      padding: 10px 14px;
+      border: none;
+      background: transparent;
+      font-family: inherit;
+      font-size: 0.92rem;
+      color: #0f172a;
+    }
+
+    .mobile-input-control:focus {
+      outline: none;
+    }
+
+    /* Password Input & Eye Button */
+    .input-control-box.password-box input {
+      padding-right: 44px;
+    }
+
+    .pwd-toggle-btn {
+      position: absolute;
+      right: 10px;
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 6px;
+      color: #64748b;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 6px;
+      transition: all 0.2s ease;
+    }
+
+    .pwd-toggle-btn:hover {
+      color: #0f172a;
+      background: #f1f5f9;
+    }
+
+    /* Structured Address Section Card */
+    .address-section-card {
+      background: #f8fafc;
+      border: 1.5px solid #cbd5e1;
+      border-radius: 12px;
+      padding: 18px 16px;
+      margin-top: 4px;
+      margin-bottom: 20px;
+    }
+
+    .address-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 6px;
+    }
+
+    .address-title {
+      font-size: 0.9rem;
+      font-weight: 700;
+      color: #0f172a;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .address-role-pill {
+      font-size: 0.7rem;
+      font-weight: 700;
+      padding: 2px 8px;
+      border-radius: 12px;
+      background: #e0f2fe;
+      color: #0369a1;
+      text-transform: uppercase;
+      letter-spacing: 0.3px;
+    }
+
+    .address-hint {
+      font-size: 0.76rem;
+      color: #64748b;
+      line-height: 1.35;
+      margin-bottom: 14px;
+    }
+
+    .address-textarea {
+      width: 100%;
+      min-height: 70px;
+      padding: 10px 12px;
+      background: #ffffff;
+      border: 1.5px solid #cbd5e1;
+      border-radius: 8px;
+      font-family: inherit;
+      font-size: 0.88rem;
+      color: #0f172a;
+      resize: vertical;
+      transition: all 0.2s ease;
+    }
+
+    .address-textarea:focus {
+      outline: none;
+      border-color: #f59e0b;
+      box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.15);
+    }
+
+    /* Password Strength Meter & Checklist */
+    .pwd-meter-box {
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+      border-radius: 8px;
+      padding: 12px 14px;
+      margin-top: 8px;
+      margin-bottom: 16px;
+    }
+
+    .pwd-meter-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 8px;
+    }
+
+    .pwd-meter-bars {
+      display: flex;
+      gap: 5px;
+      height: 6px;
+      border-radius: 3px;
+      overflow: hidden;
+      background: #e2e8f0;
+      margin-bottom: 10px;
+    }
+
+    .pwd-bar-segment {
+      flex: 1;
+      height: 100%;
+      background: #e2e8f0;
+      border-radius: 2px;
+      transition: background-color 0.25s ease;
+    }
+
+    .pwd-strength-badge {
+      font-size: 0.72rem;
+      font-weight: 700;
+      padding: 2px 8px;
+      border-radius: 10px;
+      text-transform: uppercase;
+    }
+
+    .pwd-strength-badge.weak { background: #fee2e2; color: #dc2626; }
+    .pwd-strength-badge.fair { background: #ffedd5; color: #ea580c; }
+    .pwd-strength-badge.good { background: #fef3c7; color: #d97706; }
+    .pwd-strength-badge.strong { background: #dcfce7; color: #15803d; }
+
+    .pwd-rules-list {
+      list-style: none;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 6px;
+    }
+
+    .pwd-rule-item {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.74rem;
+      color: #64748b;
+      transition: color 0.15s ease;
+    }
+
+    .pwd-rule-item.met {
+      color: #15803d;
+      font-weight: 600;
+    }
+
+    .pwd-rule-item .rule-icon {
+      font-size: 0.78rem;
+      font-weight: 800;
+    }
+
+    /* Confirm Match Indicator */
+    .pwd-match-pill {
+      font-size: 0.76rem;
+      font-weight: 600;
+      margin-top: 5px;
+      display: none;
+    }
+
+    .pwd-match-pill.matched {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      color: #15803d;
+    }
+
+    .pwd-match-pill.unmatched {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      color: #dc2626;
+    }
+
+    /* Submit CTA Buttons */
+    .auth-submit-btn {
+      width: 100%;
+      height: 48px;
+      background: var(--accent-gradient);
+      color: #111827;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 0.98rem;
+      font-weight: 800;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      box-shadow: 0 4px 14px rgba(245, 158, 11, 0.3);
+      transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+      margin-top: 10px;
+    }
+
+    .auth-submit-btn:hover {
+      background: var(--accent-gradient-hover);
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(245, 158, 11, 0.4);
+    }
+
+    .auth-submit-btn:disabled {
+      opacity: 0.65;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    /* 1-Click Fast Login Cards */
+    .fast-demo-container {
+      margin-top: 24px;
+      padding-top: 20px;
+      border-top: 1px solid #e2e8f0;
+    }
+
+    .fast-demo-title {
+      font-size: 0.75rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.6px;
+      color: #64748b;
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .fast-demo-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .fast-demo-chip {
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+      border-radius: 8px;
+      padding: 10px 14px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      font-size: 0.83rem;
+    }
+
+    .fast-demo-chip:hover {
+      background: #f1f5f9;
+      border-color: #f59e0b;
+      transform: translateX(3px);
+    }
+
+    .fast-demo-chip .chip-left {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .fast-demo-chip .chip-tag {
+      font-size: 0.72rem;
+      padding: 2px 7px;
+      border-radius: 6px;
+      background: #e2e8f0;
+      color: #334155;
+      font-weight: 600;
+    }
+
+    /* Bottom Switch prompt */
+    .auth-switch-prompt {
+      margin-top: 20px;
+      text-align: center;
+      font-size: 0.86rem;
+      color: #64748b;
+    }
+
+    .auth-switch-link {
+      color: #0284c7;
+      font-weight: 700;
+      cursor: pointer;
+      text-decoration: none;
+      margin-left: 4px;
+    }
+
+    .auth-switch-link:hover {
+      color: #f59e0b;
+      text-decoration: underline;
+    }
+
+    /* Responsive Breakpoints */
+    @media (max-width: 1024px) {
+      .auth-split-wrapper {
+        grid-template-columns: 1fr;
+      }
+      .auth-showcase-panel {
+        display: none;
+      }
+      .auth-form-panel {
+        padding: 30px 16px;
+      }
+    }
+  </style>
+</head>
+<body class="auth-screen">
+
+  <!-- Top Minimal Branding Bar -->
+  <header class="auth-top-bar">
+    <a href="index.html" class="auth-brand" title="ResourceHub">
+      <img src="images/Logo-circle.png" alt="ResourceHub Logo" class="auth-brand-img">
+      <div class="auth-brand-text">Resource<span>Hub</span></div>
+    </a>
+    <div style="display: flex; gap: 12px; align-items: center;">
+      <a href="index.html" class="auth-nav-link">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+          <polyline points="9 22 9 12 15 12 15 22"></polyline>
+        </svg>
+        <span>Explore Marketplace</span>
+      </a>
+    </div>
+  </header>
+
+  <!-- Split Screen Content -->
+  <div class="auth-split-wrapper">
+
+    <!-- LEFT PANEL: Hero Ecosystem Showcase -->
+    <aside class="auth-showcase-panel" aria-label="ResourceHub Ecosystem Benefits">
+      <div class="showcase-content">
+        <div class="showcase-badge">
+          <span class="pulse-dot"></span>
+          <span>India's P2P Tool Circulation Platform</span>
+        </div>
+
+        <h1 class="showcase-title">
+          Circulate Tools.<br>
+          <span class="gold">Monetize Equipment.</span><br>
+          Build Smarter.
+        </h1>
+
+        <p class="showcase-desc">
+          Connect directly with verified local tool owners and renters. Rent professional power tools, construction machinery, and workshop essentials with safe handover, transparent hourly & daily rates, and full verified identity.
+        </p>
+
+        <!-- Value Cards -->
+        <div class="value-pillars">
+          <div class="pillar-card">
+            <div class="pillar-icon-box">🛡️</div>
+            <div class="pillar-info">
+              <h4>Verified Lender & Borrower Network</h4>
+              <p>Every member registers with verified full name, mobile number, and active residential or workshop address for safe circulation.</p>
+            </div>
+          </div>
+
+          <div class="pillar-card">
+            <div class="pillar-icon-box">⏱️</div>
+            <div class="pillar-info">
+              <h4>Dual Rental Pricing (Hourly & Daily)</h4>
+              <p>Rent for just 2 hours to fix a sink or 7 days for a full building renovation. Clear automated calculation with zero surprise fees.</p>
+            </div>
+          </div>
+
+          <div class="pillar-card">
+            <div class="pillar-icon-box">📍</div>
+            <div class="pillar-info">
+              <h4>Direct Handover & Workshop Pickup</h4>
+              <p>Borrowers view accurate lender pickup locations; lenders receive verified borrower delivery addresses on every rental request.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Trust Metrics -->
+      <div class="showcase-stats-grid">
+        <div class="stat-pill">
+          <div class="num">10,000+</div>
+          <div class="label">Verified Users</div>
+        </div>
+        <div class="stat-pill">
+          <div class="num">2,500+</div>
+          <div class="label">Active Tools</div>
+        </div>
+        <div class="stat-pill">
+          <div class="num">99.4%</div>
+          <div class="label">Safe Return Rate</div>
+        </div>
+        <div class="stat-pill">
+          <div class="num">15+</div>
+          <div class="label">Indian Metros</div>
+        </div>
+      </div>
+    </aside>
+
+
+    <!-- RIGHT PANEL: Authentication Form -->
+    <main class="auth-form-panel">
+      <div class="auth-card-inner">
+
+        <!-- Top Pill Tabs (Sign In vs Create Account) -->
+        <div class="auth-pill-bar" role="tablist" aria-label="Account Access Options">
+          <button type="button" id="tab-btn-signin" class="auth-pill-tab active" role="tab" aria-selected="true" aria-controls="view-signin" onclick="switchAuthTab('signin')">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"></path>
+              <polyline points="10 17 15 12 10 7"></polyline>
+              <line x1="15" y1="12" x2="3" y2="12"></line>
+            </svg>
+            <span>Sign In</span>
+            <span class="pill-badge">Existing</span>
+          </button>
+
+          <button type="button" id="tab-btn-register" class="auth-pill-tab" role="tab" aria-selected="false" aria-controls="view-register" onclick="switchAuthTab('register')">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path>
+              <circle cx="9" cy="7" r="4"></circle>
+              <line x1="19" y1="8" x2="19" y2="14"></line>
+              <line x1="22" y1="11" x2="16" y2="11"></line>
+            </svg>
+            <span>Create Account</span>
+            <span class="pill-badge">New</span>
+          </button>
+        </div>
+
+
+        <!-- ========================================================
+             VIEW 1: SIGN IN FORM
+             ======================================================== -->
+        <div id="view-signin">
+          <div class="form-header-group">
+            <h2>Welcome back</h2>
+            <p>Access your tool rentals, listing dashboard, and equipment requests.</p>
+          </div>
+
+          <form id="login-form" onsubmit="handleLogin(event)">
+            <!-- Username / Email -->
+            <div class="field-wrap">
+              <label for="signin-username" class="field-label">
+                Username or Email <span class="required-asterisk">*</span>
+              </label>
+              <div class="input-control-box">
+                <span class="input-icon-left">
+                  <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                    <circle cx="12" cy="7" r="4"></circle>
+                  </svg>
+                </span>
+                <input 
+                  type="text" 
+                  id="signin-username" 
+                  class="modern-input" 
+                  required 
+                  autocomplete="username" 
+                  placeholder="Enter your username or email">
+              </div>
+            </div>
+
+            <!-- Password -->
+            <div class="field-wrap">
+              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+                <label for="signin-password" class="field-label" style="margin-bottom:0;">
+                  Password <span class="required-asterisk">*</span>
+                </label>
+              </div>
+              <div class="input-control-box password-box">
+                <span class="input-icon-left">
+                  <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                    <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+                  </svg>
+                </span>
+                <input 
+                  type="password" 
+                  id="signin-password" 
+                  class="modern-input" 
+                  required 
+                  autocomplete="current-password" 
+                  placeholder="Enter your password">
+                <button 
+                  type="button" 
+                  class="pwd-toggle-btn" 
+                  aria-label="Toggle password visibility" 
+                  onclick="togglePasswordVisibility('signin-password', this)">
+                  <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                    <circle cx="12" cy="12" r="3"></circle>
+                  </svg>
+                </button>
+              </div>
+            </div>
+
+            <!-- Submit Button -->
+            <button type="submit" id="signin-submit-btn" class="auth-submit-btn">
+              <span>Sign In to ResourceHub</span>
+              <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="5" y1="12" x2="19" y2="12"></line>
+                <polyline points="12 5 19 12 12 19"></polyline>
+              </svg>
+            </button>
+          </form>
+
+          <!-- 1-Click Fast Demo Accounts -->
+          <div class="fast-demo-container">
+            <div class="fast-demo-title">
+              <span>⚡ 1-Click Fast Demo Logins</span>
+              <span style="font-size:0.68rem; background:#f1f5f9; padding:2px 6px; border-radius:4px;">Pre-configured</span>
+            </div>
+            <div class="fast-demo-grid">
+              <div class="fast-demo-chip" onclick="quickFill('borrower1', 'borrower123')">
+                <div class="chip-left">
+                  <span>🛒</span>
+                  <div>
+                    <strong>Karthik DIY Builder</strong>
+                    <div style="font-size:0.73rem; color:#64748b;">Renter &bull; borrower1</div>
+                  </div>
+                </div>
+                <span class="chip-tag">Borrower Demo &rarr;</span>
+              </div>
+
+              <div class="fast-demo-chip" onclick="quickFill('lender1', 'lender123')">
+                <div class="chip-left">
+                  <span>🛠️</span>
+                  <div>
+                    <strong>Chennai ToolWorks Ltd.</strong>
+                    <div style="font-size:0.73rem; color:#64748b;">Tool Owner &bull; lender1</div>
+                  </div>
+                </div>
+                <span class="chip-tag" style="background:#fef3c7; color:#b45309;">Lender Demo &rarr;</span>
+              </div>
+
+              <div class="fast-demo-chip" onclick="quickFill('admin', 'ranjith567')">
+                <div class="chip-left">
+                  <span>🛡️</span>
+                  <div>
+                    <strong>Ranjith J M (System Admin)</strong>
+                    <div style="font-size:0.73rem; color:#64748b;">Platform Admin &bull; admin</div>
+                  </div>
+                </div>
+                <span class="chip-tag" style="background:#fee2e2; color:#991b1b;">Admin Demo &rarr;</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="auth-switch-prompt">
+            Don't have an account yet? 
+            <a class="auth-switch-link" onclick="switchAuthTab('register')">Create an account &rarr;</a>
+          </div>
+        </div>
+
+
+        <!-- ========================================================
+             VIEW 2: REGISTRATION FORM (BORROWER & LENDER)
+             ======================================================== -->
+        <div id="view-register" style="display: none;">
+          <div class="form-header-group">
+            <h2>Create Your Account</h2>
+            <p>Join India's trusted peer-to-peer equipment circulation network.</p>
+          </div>
+
+          <!-- Role Selection Grid -->
+          <div class="role-selection-box">
+            <div class="role-selection-label">
+              <span>Select Account Type <span class="required-asterisk">*</span></span>
+              <span id="role-selected-text" style="font-size:0.75rem; color:#b45309; font-weight:700;">Borrower / Renter</span>
+            </div>
+            <div class="role-cards-grid">
+              <div id="role-card-borrower" class="role-option-card active" onclick="selectAccountRole('BORROWER')">
+                <div class="role-badge-check">&#x2713;</div>
+                <div class="role-icon-lg">🛒</div>
+                <div class="role-card-name">Borrower / Renter</div>
+                <div class="role-card-tagline">Rent equipment with hourly/daily rates & door delivery</div>
+              </div>
+
+              <div id="role-card-lender" class="role-option-card" onclick="selectAccountRole('LENDER')">
+                <div class="role-badge-check">&#x2713;</div>
+                <div class="role-icon-lg">🛠️</div>
+                <div class="role-card-name">Tool Lender</div>
+                <div class="role-card-tagline">List tools, track rentals & earn passive circulation revenue</div>
+              </div>
+            </div>
+          </div>
+
+          <form id="register-form" onsubmit="handleRegister(event)">
+            <input type="hidden" id="reg-role" value="BORROWER">
+
+            <!-- Full Name -->
+            <div class="field-wrap">
+              <label for="reg-fullName" class="field-label">
+                Full Name <span class="required-asterisk">*</span>
+              </label>
+              <div class="input-control-box">
+                <span class="input-icon-left">
+                  <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                    <circle cx="12" cy="7" r="4"></circle>
+                  </svg>
+                </span>
+                <input 
+                  type="text" 
+                  id="reg-fullName" 
+                  class="modern-input" 
+                  required 
+                  autocomplete="name" 
+                  placeholder="e.g. Ranjith Kumar">
+              </div>
+            </div>
+
+            <!-- Username & Mobile Number (Side by Side) -->
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+              <!-- Username -->
+              <div class="field-wrap">
+                <label for="reg-username" class="field-label">
+                  Username <span class="required-asterisk">*</span>
+                </label>
+                <div class="input-control-box">
+                  <span class="input-icon-left">
+                    <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <circle cx="12" cy="12" r="4"></circle>
+                      <path d="M16 8v5a3 3 0 0 0 6 0v-1a10 10 0 1 0-3.92 7.94"></path>
+                    </svg>
+                  </span>
+                  <input 
+                    type="text" 
+                    id="reg-username" 
+                    class="modern-input" 
+                    required 
+                    autocomplete="username" 
+                    minlength="3" 
+                    maxlength="50" 
+                    placeholder="e.g. ranjith_k">
+                </div>
+              </div>
+
+              <!-- Mobile Number with +91 country prefix -->
+              <div class="field-wrap">
+                <label for="reg-mobile" class="field-label">
+                  Mobile Number <span class="required-asterisk">*</span>
+                </label>
+                <div class="mobile-input-group">
+                  <div class="mobile-country-badge" title="India (+91)">
+                    <span>🇮🇳</span>
+                    <span>+91</span>
+                  </div>
+                  <input 
+                    type="tel" 
+                    id="reg-mobile" 
+                    class="mobile-input-control" 
+                    required 
+                    autocomplete="tel-national" 
+                    pattern="[0-9]{10}" 
+                    maxlength="10"
+                    title="Please enter a 10-digit mobile number" 
+                    placeholder="9876543210">
+                </div>
+              </div>
+            </div>
+
+            <!-- Email Address -->
+            <div class="field-wrap">
+              <label for="reg-email" class="field-label">
+                Email Address <span class="required-asterisk">*</span>
+              </label>
+              <div class="input-control-box">
+                <span class="input-icon-left">
+                  <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <rect width="20" height="16" x="2" y="4" rx="2"></rect>
+                    <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"></path>
+                  </svg>
+                </span>
+                <input 
+                  type="email" 
+                  id="reg-email" 
+                  class="modern-input" 
+                  required 
+                  autocomplete="email" 
+                  placeholder="e.g. ranjith@example.com">
+              </div>
+            </div>
+
+            <!-- Role-Specific Optional Company / Workshop Name -->
+            <div id="lender-extra-fields" style="display: none;" class="field-wrap">
+              <label for="reg-companyName" class="field-label">
+                Business / Workshop / Tool Store Name (Optional)
+              </label>
+              <div class="input-control-box">
+                <span class="input-icon-left">
+                  <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M6 22V4a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v18Z"></path>
+                    <path d="M6 12H4a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h2"></path>
+                    <path d="M18 9h2a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2h-2"></path>
+                    <path d="M10 6h4"></path>
+                    <path d="M10 10h4"></path>
+                    <path d="M10 14h4"></path>
+                    <path d="M10 18h4"></path>
+                  </svg>
+                </span>
+                <input 
+                  type="text" 
+                  id="reg-companyName" 
+                  class="modern-input" 
+                  placeholder="e.g. Metro Tool Rental & Hardware Hub">
+              </div>
+            </div>
+
+            <!-- ========================================================
+                 STRUCTURED ADDRESS SECTION (BORROWER & LENDER)
+                 ======================================================== -->
+            <div class="address-section-card">
+              <div class="address-header">
+                <div class="address-title">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#f59e0b" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"></path>
+                    <circle cx="12" cy="10" r="3"></circle>
+                  </svg>
+                  <span>Complete Address Details <span class="required-asterisk">*</span></span>
+                </div>
+                <span id="address-type-badge" class="address-role-pill">Borrower Delivery Address</span>
+              </div>
+              <p class="address-hint">
+                Required for equipment pickup, circulating handover safety, and identity verification between lender and borrower.
+              </p>
+
+              <!-- City Selection Dropdown -->
+              <div class="field-wrap" style="margin-bottom: 10px;">
+                <label for="reg-city" class="field-label" style="font-size:0.8rem;">City / Metropolitan Region <span class="required-asterisk">*</span></label>
+                <div class="input-control-box">
+                  <span class="input-icon-left">🏙️</span>
+                  <select id="reg-city" class="modern-select" onchange="handleCityDropdownChange()" required>
+                    <option value="Bengaluru">Bengaluru (Karnataka)</option>
+                    <option value="Mumbai">Mumbai (Maharashtra)</option>
+                    <option value="Delhi NCR">Delhi NCR (Capital Region)</option>
+                    <option value="Hyderabad">Hyderabad (Telangana)</option>
+                    <option value="Chennai">Chennai (Tamil Nadu)</option>
+                    <option value="Pune">Pune (Maharashtra)</option>
+                    <option value="Kolkata">Kolkata (West Bengal)</option>
+                    <option value="Ahmedabad">Ahmedabad (Gujarat)</option>
+                    <option value="Jaipur">Jaipur (Rajasthan)</option>
+                    <option value="Chandigarh">Chandigarh (Punjab/Haryana)</option>
+                    <option value="Lucknow">Lucknow (Uttar Pradesh)</option>
+                    <option value="Kochi">Kochi (Kerala)</option>
+                    <option value="Coimbatore">Coimbatore (Tamil Nadu)</option>
+                    <option value="Indore">Indore (Madhya Pradesh)</option>
+                    <option value="Other">Other City (Specify below)...</option>
+                  </select>
+                </div>
+              </div>
+
+              <!-- Custom City Field (Hidden by default) -->
+              <div id="reg-custom-city-wrap" class="field-wrap" style="display: none; margin-bottom: 10px;">
+                <label for="reg-custom-city" class="field-label" style="font-size:0.8rem;">Your City Name <span class="required-asterisk">*</span></label>
+                <div class="input-control-box">
+                  <span class="input-icon-left">📍</span>
+                  <input type="text" id="reg-custom-city" class="modern-input" placeholder="e.g. Mysuru, Surat, Bhopal, Madurai">
+                </div>
+              </div>
+
+              <!-- Street Address Textarea -->
+              <div>
+                <label for="reg-street-address" id="reg-street-label" class="field-label" style="font-size:0.8rem;">
+                  Residential Street Address, Building & Pincode <span class="required-asterisk">*</span>
+                </label>
+                <textarea 
+                  id="reg-street-address" 
+                  class="address-textarea" 
+                  required 
+                  minlength="5" 
+                  maxlength="400" 
+                  autocomplete="street-address" 
+                  placeholder="e.g. Flat 302, Green Valley Apts, 12th Cross, Indiranagar, Bengaluru - 560038"></textarea>
+                <div style="font-size: 0.72rem; color: #64748b; margin-top: 4px;">
+                  Provide your house/workshop number, street name, area, and 6-digit pincode.
+                </div>
+              </div>
+            </div>
+
+            <!-- Password -->
+            <div class="field-wrap">
+              <label for="reg-password" class="field-label">
+                Create Password <span class="required-asterisk">*</span>
+              </label>
+              <div class="input-control-box password-box">
+                <span class="input-icon-left">
+                  <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                    <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+                  </svg>
+                </span>
+                <input 
+                  type="password" 
+                  id="reg-password" 
+                  class="modern-input" 
+                  required 
+                  autocomplete="new-password" 
+                  placeholder="Create a strong password" 
+                  oninput="evaluatePasswordSecurity()">
+                <button 
+                  type="button" 
+                  class="pwd-toggle-btn" 
+                  aria-label="Toggle password visibility" 
+                  onclick="togglePasswordVisibility('reg-password', this)">
+                  <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                    <circle cx="12" cy="12" r="3"></circle>
+                  </svg>
+                </button>
+              </div>
+
+              <!-- Interactive Password Strength Meter -->
+              <div class="pwd-meter-box">
+                <div class="pwd-meter-header">
+                  <span style="font-size: 0.75rem; color: #64748b; font-weight: 600;">Security Strength:</span>
+                  <span id="pwd-strength-badge" class="pwd-strength-badge weak">Too Short</span>
+                </div>
+                <div class="pwd-meter-bars">
+                  <div id="bar-1" class="pwd-bar-segment"></div>
+                  <div id="bar-2" class="pwd-bar-segment"></div>
+                  <div id="bar-3" class="pwd-bar-segment"></div>
+                  <div id="bar-4" class="pwd-bar-segment"></div>
+                </div>
+                <ul class="pwd-rules-list">
+                  <li id="rule-len" class="pwd-rule-item">
+                    <span class="rule-icon">&#9675;</span>
+                    <span>8+ characters</span>
+                  </li>
+                  <li id="rule-upper" class="pwd-rule-item">
+                    <span class="rule-icon">&#9675;</span>
+                    <span>1 uppercase (A-Z)</span>
+                  </li>
+                  <li id="rule-lower" class="pwd-rule-item">
+                    <span class="rule-icon">&#9675;</span>
+                    <span>1 lowercase (a-z)</span>
+                  </li>
+                  <li id="rule-num" class="pwd-rule-item">
+                    <span class="rule-icon">&#9675;</span>
+                    <span>1 number (0-9)</span>
+                  </li>
+                  <li id="rule-sym" class="pwd-rule-item" style="grid-column: span 2;">
+                    <span class="rule-icon">&#9675;</span>
+                    <span>1 special symbol (@$!%*?&#^~-+_.)</span>
+                  </li>
+                </ul>
+              </div>
+            </div>
+
+            <!-- Confirm Password -->
+            <div class="field-wrap">
+              <label for="reg-confirm-password" class="field-label">
+                Confirm Password <span class="required-asterisk">*</span>
+              </label>
+              <div class="input-control-box password-box">
+                <span class="input-icon-left">
+                  <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10"></path>
+                  </svg>
+                </span>
+                <input 
+                  type="password" 
+                  id="reg-confirm-password" 
+                  class="modern-input" 
+                  required 
+                  autocomplete="new-password" 
+                  placeholder="Re-enter your password to confirm" 
+                  oninput="checkPasswordMatch()">
+                <button 
+                  type="button" 
+                  class="pwd-toggle-btn" 
+                  aria-label="Toggle password visibility" 
+                  onclick="togglePasswordVisibility('reg-confirm-password', this)">
+                  <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                    <circle cx="12" cy="12" r="3"></circle>
+                  </svg>
+                </button>
+              </div>
+              <div id="pwd-match-pill" class="pwd-match-pill"></div>
+            </div>
+
+            <!-- Agreement Checkbox -->
+            <div style="display: flex; gap: 10px; align-items: flex-start; margin-bottom: 20px;">
+              <input type="checkbox" id="reg-agreement" required style="margin-top: 3px; cursor: pointer;">
+              <label for="reg-agreement" style="font-size: 0.8rem; color: #475569; line-height: 1.4; cursor: pointer;">
+                I verify that my name, mobile number, and address are accurate, and I agree to ResourceHub's <strong>Circulation Safety Guidelines</strong>, equipment return policy, and terms of service.
+              </label>
+            </div>
+
+            <!-- Submit Register Button -->
+            <button type="submit" id="register-submit-btn" class="auth-submit-btn">
+              <span id="reg-btn-text">Create Borrower Account</span>
+              <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="5" y1="12" x2="19" y2="12"></line>
+                <polyline points="12 5 19 12 12 19"></polyline>
+              </svg>
+            </button>
+          </form>
+
+          <div class="auth-switch-prompt">
+            Already have a ResourceHub account? 
+            <a class="auth-switch-link" onclick="switchAuthTab('signin')">&larr; Sign in here</a>
+          </div>
+        </div>
+
+      </div>
+    </main>
+  </div>
+
+  <script src="js/config.js"></script>
+  <script src="js/api.js"></script>
+  <script>
+    // State management
+    let activeRole = "BORROWER";
+    let isPasswordSecure = false;
+    let doPasswordsMatch = false;
+
+    // Tab Switching
+    function switchAuthTab(tab) {
+      const signInView = document.getElementById("view-signin");
+      const registerView = document.getElementById("view-register");
+      const signInTab = document.getElementById("tab-btn-signin");
+      const registerTab = document.getElementById("tab-btn-register");
+
+      if (tab === "register") {
+        signInView.style.display = "none";
+        registerView.style.display = "block";
+        signInTab.classList.remove("active");
+        signInTab.setAttribute("aria-selected", "false");
+        registerTab.classList.add("active");
+        registerTab.setAttribute("aria-selected", "true");
+        window.location.hash = "register";
+        document.title = "Create Account | ResourceHub Resource Circulation";
+      } else {
+        signInView.style.display = "block";
+        registerView.style.display = "none";
+        signInTab.classList.add("active");
+        signInTab.setAttribute("aria-selected", "true");
+        registerTab.classList.remove("active");
+        registerTab.setAttribute("aria-selected", "false");
+        window.location.hash = "signin";
+        document.title = "Sign In | ResourceHub Resource Circulation";
+      }
+    }
+
+    // Role Selection
+    function selectAccountRole(role) {
+      activeRole = role;
+      document.getElementById("reg-role").value = role;
+
+      const borrowerCard = document.getElementById("role-card-borrower");
+      const lenderCard = document.getElementById("role-card-lender");
+      const lenderExtra = document.getElementById("lender-extra-fields");
+      const roleSelectedText = document.getElementById("role-selected-text");
+      const addressTypeBadge = document.getElementById("address-type-badge");
+      const streetLabel = document.getElementById("reg-street-label");
+      const streetInput = document.getElementById("reg-street-address");
+      const regBtnText = document.getElementById("reg-btn-text");
+
+      if (role === "LENDER") {
+        borrowerCard.classList.remove("active");
+        lenderCard.classList.add("active");
+        lenderExtra.style.display = "block";
+        roleSelectedText.textContent = "Tool Lender / Workshop";
+        roleSelectedText.style.color = "#b45309";
+
+        addressTypeBadge.textContent = "Lender Equipment Pickup / Workshop Address";
+        addressTypeBadge.style.background = "#fef3c7";
+        addressTypeBadge.style.color = "#b45309";
+
+        streetLabel.innerHTML = 'Workshop / Equipment Storage Address & Pincode <span class="required-asterisk">*</span>';
+        streetInput.placeholder = "e.g. Unit 4B, Metro Industrial Estate, Guindy, Chennai - 600032";
+
+        regBtnText.textContent = "Create Tool Lender Account";
+      } else {
+        lenderCard.classList.remove("active");
+        borrowerCard.classList.add("active");
+        lenderExtra.style.display = "none";
+        roleSelectedText.textContent = "Borrower / Renter";
+        roleSelectedText.style.color = "#0369a1";
+
+        addressTypeBadge.textContent = "Borrower Residential Delivery Address";
+        addressTypeBadge.style.background = "#e0f2fe";
+        addressTypeBadge.style.color = "#0369a1";
+
+        streetLabel.innerHTML = 'Residential Street Address, Building & Pincode <span class="required-asterisk">*</span>';
+        streetInput.placeholder = "e.g. Flat 302, Green Valley Apts, 12th Cross, Indiranagar, Bengaluru - 560038";
+
+        regBtnText.textContent = "Create Borrower Account";
+      }
+    }
+
+    // Handle City Dropdown "Other"
+    function handleCityDropdownChange() {
+      const citySelect = document.getElementById("reg-city");
+      const customWrap = document.getElementById("reg-custom-city-wrap");
+      const customInput = document.getElementById("reg-custom-city");
+
+      if (citySelect.value === "Other") {
+        customWrap.style.display = "block";
+        customInput.required = true;
+        customInput.focus();
+      } else {
+        customWrap.style.display = "none";
+        customInput.required = false;
+      }
+    }
+
+    // Password Visibility Toggle
+    function togglePasswordVisibility(inputId, btn) {
+      const input = document.getElementById(inputId);
+      if (!input) return;
+
+      const isPwd = input.type === "password";
+      input.type = isPwd ? "text" : "password";
+
+      if (isPwd) {
+        btn.innerHTML = `
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path>
+            <line x1="1" y1="1" x2="23" y2="23"></line>
+          </svg>
+        `;
+        btn.setAttribute("aria-label", "Hide password");
+      } else {
+        btn.innerHTML = `
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+            <circle cx="12" cy="12" r="3"></circle>
+          </svg>
+        `;
+        btn.setAttribute("aria-label", "Show password");
+      }
+    }
+
+    // Password Security & Strength Evaluator
+    function evaluatePasswordSecurity() {
+      const pwd = document.getElementById("reg-password").value;
+      const ruleLen = document.getElementById("rule-len");
+      const ruleUpper = document.getElementById("rule-upper");
+      const ruleLower = document.getElementById("rule-lower");
+      const ruleNum = document.getElementById("rule-num");
+      const ruleSym = document.getElementById("rule-sym");
+
+      const hasLen = pwd.length >= 8;
+      const hasUpper = /[A-Z]/.test(pwd);
+      const hasLower = /[a-z]/.test(pwd);
+      const hasNum = /[0-9]/.test(pwd);
+      const hasSym = /[@$!%*?&#^~+_./=<>;:\-]/.test(pwd);
+
+      updateRuleItem(ruleLen, hasLen);
+      updateRuleItem(ruleUpper, hasUpper);
+      updateRuleItem(ruleLower, hasLower);
+      updateRuleItem(ruleNum, hasNum);
+      updateRuleItem(ruleSym, hasSym);
+
+      const score = [hasLen, hasUpper, hasLower, hasNum, hasSym].filter(Boolean).length;
+      isPasswordSecure = (score === 5);
+
+      const bars = [
+        document.getElementById("bar-1"),
+        document.getElementById("bar-2"),
+        document.getElementById("bar-3"),
+        document.getElementById("bar-4")
+      ];
+      const badge = document.getElementById("pwd-strength-badge");
+
+      bars.forEach(b => b.style.backgroundColor = "#e2e8f0");
+      badge.className = "pwd-strength-badge";
+
+      if (pwd.length === 0) {
+        badge.textContent = "Required";
+        badge.classList.add("weak");
+      } else if (score <= 2) {
+        bars[0].style.backgroundColor = "#dc2626";
+        badge.textContent = "Weak";
+        badge.classList.add("weak");
+      } else if (score === 3) {
+        bars[0].style.backgroundColor = "#ea580c";
+        bars[1].style.backgroundColor = "#ea580c";
+        badge.textContent = "Fair";
+        badge.classList.add("fair");
+      } else if (score === 4) {
+        bars[0].style.backgroundColor = "#d97706";
+        bars[1].style.backgroundColor = "#d97706";
+        bars[2].style.backgroundColor = "#d97706";
+        badge.textContent = "Good";
+        badge.classList.add("good");
+      } else {
+        bars.forEach(b => b.style.backgroundColor = "#15803d");
+        badge.textContent = "Strong & Secure";
+        badge.classList.add("strong");
+      }
+
+      checkPasswordMatch();
+    }
+
+    function updateRuleItem(el, isMet) {
+      if (isMet) {
+        el.classList.add("met");
+        el.querySelector(".rule-icon").innerHTML = "&#10003;";
+      } else {
+        el.classList.remove("met");
+        el.querySelector(".rule-icon").innerHTML = "&#9675;";
+      }
+    }
+
+    function checkPasswordMatch() {
+      const pwd = document.getElementById("reg-password").value;
+      const confirmPwd = document.getElementById("reg-confirm-password").value;
+      const pill = document.getElementById("pwd-match-pill");
+
+      if (!confirmPwd) {
+        pill.className = "pwd-match-pill";
+        pill.textContent = "";
+        doPasswordsMatch = false;
+        return;
+      }
+
+      if (pwd === confirmPwd) {
+        pill.className = "pwd-match-pill matched";
+        pill.innerHTML = `<span>&#10003; Passwords match perfectly</span>`;
+        doPasswordsMatch = true;
+      } else {
+        pill.className = "pwd-match-pill unmatched";
+        pill.innerHTML = `<span>&#10007; Passwords do not match</span>`;
+        doPasswordsMatch = false;
+      }
+    }
+
+    // 1-Click Fast Login
+    function quickFill(user, pass) {
+      switchAuthTab("signin");
+      document.getElementById("signin-username").value = user;
+      document.getElementById("signin-password").value = pass;
+      document.getElementById("login-form").requestSubmit();
+    }
+
+    // Handle Login Submit
+    async function handleLogin(e) {
+      e.preventDefault();
+      const usernameInput = document.getElementById("signin-username");
+      const passwordInput = document.getElementById("signin-password");
+      const submitBtn = document.getElementById("signin-submit-btn");
+
+      const username = usernameInput.value.trim();
+      const password = passwordInput.value;
+
+      if (!username || !password) {
+        showToast("Please enter both your username/email and password", "warning");
+        return;
+      }
+
+      submitBtn.disabled = true;
+      submitBtn.innerHTML = `
+        <span class="spinner" style="display:inline-block; width:16px; height:16px; border:2px solid #111; border-top-color:transparent; border-radius:50%; animation:spin 0.6s linear infinite;"></span>
+        <span>Signing in...</span>
+      `;
+
+      try {
+        const res = await Api.login(username, password);
+        Api.setAuth(res.data);
+        showToast(`Welcome back, ${res.data.fullName || res.data.username}!`, "success");
+
+        setTimeout(() => {
+          if (res.data.role === "LENDER") {
+            window.location.href = "lender-dashboard.html";
+          } else if (res.data.role === "ADMIN") {
+            window.location.href = "admin-dashboard.html";
+          } else {
+            window.location.href = "borrower-dashboard.html";
+          }
+        }, 700);
+      } catch (err) {
+        showToast(err.message || "Invalid username or password", "error");
+        submitBtn.disabled = false;
+        submitBtn.innerHTML = `
+          <span>Sign In to ResourceHub</span>
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="5" y1="12" x2="19" y2="12"></line>
+            <polyline points="12 5 19 12 12 19"></polyline>
+          </svg>
+        `;
+      }
+    }
+
+    // Handle Register Submit
+    async function handleRegister(e) {
+      e.preventDefault();
+      const submitBtn = document.getElementById("register-submit-btn");
+
+      const fullName = document.getElementById("reg-fullName").value.trim();
+      const username = document.getElementById("reg-username").value.trim();
+      const email = document.getElementById("reg-email").value.trim();
+      const mobile = document.getElementById("reg-mobile").value.trim();
+      const password = document.getElementById("reg-password").value;
+      const confirmPassword = document.getElementById("reg-confirm-password").value;
+      const role = document.getElementById("reg-role").value;
+      const companyName = document.getElementById("reg-companyName")?.value?.trim() || null;
+
+      // Extract City & Street Address
+      const citySelect = document.getElementById("reg-city");
+      const chosenCity = citySelect.value === "Other" 
+        ? document.getElementById("reg-custom-city").value.trim() 
+        : citySelect.value;
+      const street = document.getElementById("reg-street-address").value.trim();
+
+      // Validations
+      if (!isPasswordSecure) {
+        showToast("Please fulfill all strong password security requirements.", "error");
+        document.getElementById("reg-password").focus();
+        return;
+      }
+
+      if (password !== confirmPassword) {
+        showToast("Passwords do not match. Please verify your confirm password.", "error");
+        document.getElementById("reg-confirm-password").focus();
+        return;
+      }
+
+      if (!mobile || !/^[0-9]{10}$/.test(mobile)) {
+        showToast("Please enter a valid 10-digit Indian mobile number.", "error");
+        document.getElementById("reg-mobile").focus();
+        return;
+      }
+
+      if (!street || street.length < 5) {
+        showToast("Please enter a complete address (minimum 5 characters).", "error");
+        document.getElementById("reg-street-address").focus();
+        return;
+      }
+
+      if (citySelect.value === "Other" && (!chosenCity || chosenCity.length < 2)) {
+        showToast("Please enter your city name.", "error");
+        document.getElementById("reg-custom-city").focus();
+        return;
+      }
+
+      const combinedAddress = `${chosenCity} - ${street}`;
+
+      const payload = {
+        fullName,
+        username,
+        email,
+        mobile,
+        password,
+        role,
+        address: combinedAddress,
+        companyName: role === "LENDER" ? companyName : null
+      };
+
+      submitBtn.disabled = true;
+      submitBtn.innerHTML = `
+        <span class="spinner" style="display:inline-block; width:16px; height:16px; border:2px solid #111; border-top-color:transparent; border-radius:50%; animation:spin 0.6s linear infinite;"></span>
+        <span>Creating Account...</span>
+      `;
+
+      try {
+        const res = await Api.register(payload);
+        Api.setAuth(res.data);
+        showToast(`Account created successfully! Welcome to ResourceHub, ${res.data.fullName || res.data.username}.`, "success");
+
+        setTimeout(() => {
+          if (res.data.role === "LENDER") {
+            window.location.href = "lender-dashboard.html";
+          } else {
+            window.location.href = "borrower-dashboard.html";
+          }
+        }, 900);
+      } catch (err) {
+        showToast(err.message || "Registration failed. Please verify your inputs.", "error");
+        submitBtn.disabled = false;
+        submitBtn.innerHTML = `
+          <span>Create Account</span>
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="5" y1="12" x2="19" y2="12"></line>
+            <polyline points="12 5 19 12 12 19"></polyline>
+          </svg>
+        `;
+      }
+    }
+
+    // Auto-detect tab on page load
+    document.addEventListener("DOMContentLoaded", () => {
+      const urlParams = new URLSearchParams(window.location.search);
+      const tabParam = urlParams.get("tab") || (window.location.hash ? window.location.hash.replace("#", "") : "");
+      if (tabParam === "register") {
+        switchAuthTab("register");
+      } else {
+        switchAuthTab("signin");
+      }
+    });
+  </script>
+</body>
+</html>

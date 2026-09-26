@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Dashboard | ResourceHub</title>
+  <link rel="icon" type="image/png" href="images/Logo-circle.png">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    .admin-nav-tabs {
+      display: flex;
+      gap: 12px;
+      margin-bottom: 20px;
+      border-bottom: 2px solid var(--border-color);
+      padding-bottom: 8px;
+    }
+    .admin-tab {
+      padding: 8px 16px;
+      font-weight: 700;
+      color: var(--text-muted);
+      cursor: pointer;
+      border-radius: var(--radius-sm);
+      transition: var(--transition);
+    }
+    .admin-tab:hover, .admin-tab.active {
+      color: var(--text-main);
+      background: #e6e9ec;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Top Navbar -->
+  <header class="top-navbar">
+    <a href="index.html" class="brand-logo" title="ResourceHub">
+      <img src="images/Logo-circle.png" alt="ResourceHub Logo" class="brand-logo-img">
+      <span class="brand-text">Resource<span class="highlight">Hub</span></span>
+    </a>
+    <span class="role-pill" style="background:#dc3545; color:#fff; font-size:0.85rem; padding:4px 10px;">Platform Administration</span>
+    <div style="flex:1;"></div>
+    <div class="nav-actions">
+      <a href="index.html" class="nav-link-btn">
+        <span class="subtext">View</span>
+        <strong>Marketplace</strong>
+      </a>
+      <div id="nav-account"></div>
+    </div>
+  </header>
+
+  <main class="page-container" style="margin-top: 24px;">
+    <!-- Welcome Header -->
+    <div class="dashboard-header">
+      <div>
+        <h1 style="font-size: 1.5rem; font-weight: 800;">Platform Administration Control Center</h1>
+        <p style="color: var(--text-muted); font-size: 0.9rem;">Monitor users, manage tool catalog moderation, audit transactions, and resolve feedback</p>
+      </div>
+    </div>
+
+    <!-- KPI Metric Cards -->
+    <div class="kpi-grid">
+      <div class="kpi-card">
+        <span class="kpi-label">Total Users</span>
+        <span id="kpi-users" class="kpi-value">--</span>
+      </div>
+      <div class="kpi-card">
+        <span class="kpi-label">Total Tools Listed</span>
+        <span id="kpi-tools" class="kpi-value">--</span>
+      </div>
+      <div class="kpi-card">
+        <span class="kpi-label">Circulation Transactions</span>
+        <span id="kpi-transactions" class="kpi-value">--</span>
+      </div>
+      <div class="kpi-card">
+        <span class="kpi-label">User Feedback & Suggestions</span>
+        <span id="kpi-suggestions" class="kpi-value">--</span>
+      </div>
+    </div>
+
+    <!-- Navigation Tabs -->
+    <div class="admin-nav-tabs">
+      <div class="admin-tab active" onclick="switchTab('users')">👥 User Accounts</div>
+      <div class="admin-tab" onclick="switchTab('tools')">🛠️ Tool Inventory Moderation</div>
+      <div class="admin-tab" onclick="switchTab('transactions')">📑 Transactions Ledger</div>
+      <div class="admin-tab" onclick="switchTab('suggestions')">💡 Feedback & Suggestions</div>
+    </div>
+
+    <!-- Tab 1: Users Management -->
+    <div id="tab-users-content" class="data-table-container">
+      <div class="table-header">
+        <h3 style="font-size: 1.1rem; font-weight: 700;">Platform Users</h3>
+      </div>
+      <div style="overflow-x: auto;">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Full Name</th>
+              <th>Username</th>
+              <th>Role</th>
+              <th>Email</th>
+              <th>Mobile</th>
+              <th>Address & Workshop</th>
+              <th>Status</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="users-tbody">
+            <tr><td colspan="9" style="text-align: center; color: #888;">Loading users...</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Tab 2: Tools Moderation -->
+    <div id="tab-tools-content" class="data-table-container" style="display: none;">
+      <div class="table-header">
+        <h3 style="font-size: 1.1rem; font-weight: 700;">Tool Catalog Moderation</h3>
+      </div>
+      <div style="overflow-x: auto;">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Tool Name</th>
+              <th>Category</th>
+              <th>Lender</th>
+              <th>Hourly / Daily Rate</th>
+              <th>Status</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="tools-tbody">
+            <tr><td colspan="7" style="text-align: center; color: #888;">Loading tools...</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Tab 3: Transactions Ledger -->
+    <div id="tab-transactions-content" class="data-table-container" style="display: none;">
+      <div class="table-header">
+        <h3 style="font-size: 1.1rem; font-weight: 700;">Complete Rental Transactions Ledger</h3>
+      </div>
+      <div style="overflow-x: auto;">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Txn ID</th>
+              <th>Tool</th>
+              <th>Lender</th>
+              <th>Borrower</th>
+              <th>Mode / Dates</th>
+              <th>Total (₹)</th>
+              <th>Fine (₹)</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody id="transactions-tbody">
+            <tr><td colspan="8" style="text-align: center; color: #888;">Loading transactions...</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Tab 4: Suggestions & Feedback -->
+    <div id="tab-suggestions-content" class="data-table-container" style="display: none;">
+      <div class="table-header">
+        <h3 style="font-size: 1.1rem; font-weight: 700;">User Suggestions & Feedback</h3>
+      </div>
+      <div style="overflow-x: auto;">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>User</th>
+              <th>Subject</th>
+              <th>Message</th>
+              <th>Status</th>
+              <th>Admin Response</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="suggestions-tbody">
+            <tr><td colspan="6" style="text-align: center; color: #888;">Loading suggestions...</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </main>
+
+  <script src="js/config.js"></script>
+  <script src="js/api.js"></script>
+  <script>
+    const user = Api.getUser();
+    if (!user || user.role !== "ADMIN") {
+      alert("Access Denied: Administrator login required");
+      window.location.href = "login.html";
+    }
+
+    function switchTab(tabId) {
+      document.querySelectorAll(".admin-tab").forEach(t => t.classList.remove("active"));
+      event.target.classList.add("active");
+
+      document.getElementById("tab-users-content").style.display = tabId === 'users' ? 'block' : 'none';
+      document.getElementById("tab-tools-content").style.display = tabId === 'tools' ? 'block' : 'none';
+      document.getElementById("tab-transactions-content").style.display = tabId === 'transactions' ? 'block' : 'none';
+      document.getElementById("tab-suggestions-content").style.display = tabId === 'suggestions' ? 'block' : 'none';
+
+      if (tabId === 'users') loadUsers();
+      if (tabId === 'tools') loadAdminTools();
+      if (tabId === 'transactions') loadTransactions();
+      if (tabId === 'suggestions') loadSuggestions();
+    }
+
+    async function loadAdminDashboard() {
+      try {
+        const statsRes = await Api.getAdminStats();
+        const s = statsRes.data;
+        document.getElementById("kpi-users").textContent = s.totalUsers;
+        document.getElementById("kpi-tools").textContent = s.totalTools;
+        document.getElementById("kpi-transactions").textContent = s.totalTransactions;
+        document.getElementById("kpi-suggestions").textContent = s.totalSuggestions;
+
+        loadUsers();
+      } catch (err) {
+        console.error(err);
+      }
+    }
+
+    async function loadUsers() {
+      const tbody = document.getElementById("users-tbody");
+      try {
+        const res = await Api.getAdminUsers();
+        const users = res.data || [];
+        tbody.innerHTML = users.map(u => `
+          <tr>
+            <td>#${u.id}</td>
+            <td><strong>${u.fullName}</strong></td>
+            <td>@${u.username}</td>
+            <td><span class="role-pill">${u.role}</span></td>
+            <td>${u.email}</td>
+            <td><a href="tel:${u.mobile}" style="color:#0284c7; font-weight:600;">📞 ${u.mobile}</a></td>
+            <td>
+              <div style="font-size:0.8rem; line-height:1.35; max-width:240px;">
+                <span>📍 ${u.address || 'No address provided'}</span>
+                ${u.companyName ? `<div style="color:#b45309; font-weight:700; font-size:0.75rem; margin-top:2px;">🏢 ${u.companyName}</div>` : ''}
+              </div>
+            </td>
+            <td>
+              <span class="status-badge ${u.active ? 'available' : 'borrowed'}" style="position:static;">
+                ${u.active ? 'Active' : 'Deactivated'}
+              </span>
+            </td>
+            <td>
+              <button class="${u.active ? 'btn-danger' : 'btn-primary'}" style="padding:4px 8px; font-size:0.8rem;" onclick="toggleUserStatus(${u.id}, ${!u.active})">
+                ${u.active ? 'Deactivate' : 'Activate'}
+              </button>
+            </td>
+          </tr>
+        `).join("");
+      } catch (err) {
+        tbody.innerHTML = `<tr><td colspan="8" style="color:red;">Error: ${err.message}</td></tr>`;
+      }
+    }
+
+    async function toggleUserStatus(id, newStatus) {
+      try {
+        await Api.updateUserStatus(id, newStatus);
+        showToast("User status updated", "success");
+        loadUsers();
+      } catch (err) {
+        showToast(err.message, "error");
+      }
+    }
+
+    async function loadAdminTools() {
+      const tbody = document.getElementById("tools-tbody");
+      try {
+        const res = await Api.getAdminTools();
+        const tools = res.data || [];
+        tbody.innerHTML = tools.map(t => `
+          <tr>
+            <td>#${t.id}</td>
+            <td><strong>${t.toolName}</strong></td>
+            <td>${t.category}</td>
+            <td>${t.lenderName || 'Lender #' + t.lenderId}</td>
+            <td>₹${t.hourlyRate}/hr &bull; ₹${t.dailyRate}/day</td>
+            <td><span class="status-badge ${t.availabilityStatus === 'AVAILABLE' ? 'available' : 'borrowed'}" style="position:static;">${t.availabilityStatus}</span></td>
+            <td>
+              <button class="btn-danger" style="padding:4px 8px; font-size:0.8rem;" onclick="adminDeleteTool(${t.id})">Remove Tool</button>
+            </td>
+          </tr>
+        `).join("");
+      } catch (err) {
+        tbody.innerHTML = `<tr><td colspan="7" style="color:red;">Error: ${err.message}</td></tr>`;
+      }
+    }
+
+    async function adminDeleteTool(id) {
+      if (!confirm("Are you sure you want to remove this tool from the platform?")) return;
+      try {
+        await Api.deleteTool(id);
+        showToast("Tool removed", "success");
+        loadAdminTools();
+      } catch (err) {
+        showToast(err.message, "error");
+      }
+    }
+
+    async function loadTransactions() {
+      const tbody = document.getElementById("transactions-tbody");
+      try {
+        const res = await Api.getAdminTransactions();
+        const list = res.data || [];
+        tbody.innerHTML = list.map(tx => `
+          <tr>
+            <td>#${tx.id}</td>
+            <td><strong>${tx.toolName}</strong></td>
+            <td>${tx.lenderName || 'Lender'}</td>
+            <td>${tx.borrowerName || 'Borrower'}</td>
+            <td><small>${tx.rentalType} (${tx.duration})<br>${tx.startTime.replace('T', ' ')}</small></td>
+            <td><strong style="color:var(--price-color);">₹${tx.totalAmount}</strong></td>
+            <td>${tx.fineAmount > 0 ? `<strong style="color:red;">₹${tx.fineAmount}</strong>` : '₹0'}</td>
+            <td><span class="status-badge ${tx.status === 'COMPLETED' ? 'available' : ''}" style="position:static;">${tx.status}</span></td>
+          </tr>
+        `).join("");
+      } catch (err) {
+        tbody.innerHTML = `<tr><td colspan="8" style="color:red;">Error: ${err.message}</td></tr>`;
+      }
+    }
+
+    async function loadSuggestions() {
+      const tbody = document.getElementById("suggestions-tbody");
+      try {
+        const res = await Api.getAdminSuggestions();
+        const list = res.data || [];
+        tbody.innerHTML = list.map(s => `
+          <tr>
+            <td><strong>${s.userName}</strong><br><small style="color:#666;">${s.userRole}</small></td>
+            <td><strong>${s.subject}</strong></td>
+            <td><small>${s.message}</small></td>
+            <td><span class="status-badge available" style="position:static;">${s.status}</span></td>
+            <td><small>${s.adminResponse || '<em>No response yet</em>'}</small></td>
+            <td>
+              <button class="btn-secondary" style="padding:4px 8px; font-size:0.8rem;" onclick="respondSuggestion(${s.id})">Respond / Resolve</button>
+            </td>
+          </tr>
+        `).join("");
+      } catch (err) {
+        tbody.innerHTML = `<tr><td colspan="6" style="color:red;">Error: ${err.message}</td></tr>`;
+      }
+    }
+
+    async function respondSuggestion(id) {
+      const response = prompt("Enter your response message to the user:");
+      if (!response) return;
+      try {
+        await Api.updateSuggestionStatus(id, "RESOLVED", response);
+        showToast("Feedback marked as resolved with response", "success");
+        loadSuggestions();
+      } catch (err) {
+        showToast(err.message, "error");
+      }
+    }
+
+    document.addEventListener("DOMContentLoaded", loadAdminDashboard);
+  </script>
+</body>
+</html>

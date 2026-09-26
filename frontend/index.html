@@ -1,0 +1,697 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ResourceHub | Tool Circulation & Equipment Rental</title>
+  <link rel="icon" type="image/png" href="images/Logo-circle.png">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+
+  <!-- Top Amazon-style Navbar -->
+  <header class="top-navbar">
+    <a href="index.html" class="brand-logo" title="ResourceHub">
+      <img src="images/Logo-circle.png" alt="ResourceHub Logo" class="brand-logo-img">
+      <span class="brand-text">Resource<span class="highlight">Hub</span></span>
+    </a>
+
+    <div class="location-badge" id="nav-location-badge" title="Deliver or Pickup location - Click to change city" onclick="openCityModal()">
+      <span>Delivering to</span>
+      <strong id="nav-current-city">All Cities ▾</strong>
+    </div>
+
+    <!-- Central Search Bar with Category Select -->
+    <div class="nav-search-container">
+      <select id="nav-category-select" class="search-category-select">
+        <option value="All">All Categories</option>
+        <option value="Hand Tools">Hand Tools</option>
+        <option value="Heavy Machinery">Heavy Machinery (JCB)</option>
+        <option value="Tractors & Farm">Tractors & Farm</option>
+        <option value="Transport & Load">Transport Trucks & Load</option>
+        <option value="Power Tools">Power Tools</option>
+        <option value="Construction">Construction</option>
+        <option value="Cleaning">Cleaning</option>
+        <option value="Gardening">Gardening</option>
+        <option value="Workshop">Workshop</option>
+        <option value="Automotive">Automotive</option>
+      </select>
+      <input type="text" id="nav-search-input" class="search-input" placeholder="Search hand tools, wrenches, hammers, saws, JCB, drills...">
+      <button id="nav-search-btn" class="search-button" title="Search">
+        <svg viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>
+      </button>
+    </div>
+
+    <!-- Right Actions -->
+    <div class="nav-actions">
+      <div id="nav-account">
+        <!-- Injected dynamically by api.js -->
+      </div>
+      <a href="register.html" class="nav-link-btn" id="nav-register-btn">
+        <span class="subtext">Start Lending</span>
+        <strong>Become a Partner</strong>
+      </a>
+    </div>
+  </header>
+
+  <!-- Sub Navigation Bar with Hand Tools & Equipment -->
+  <nav class="sub-navbar">
+    <a class="sub-nav-item active" onclick="filterByCategory('All')">&#9776; All Catalog</a>
+    <a class="sub-nav-item" onclick="filterByCategory('Hand Tools')">&#128296; Hand Tools</a>
+    <a class="sub-nav-item" onclick="filterByCategory('Heavy Machinery')">&#128676; Heavy Machinery (JCB)</a>
+    <a class="sub-nav-item" onclick="filterByCategory('Tractors & Farm')">&#128668; Tractors & Trolleys</a>
+    <a class="sub-nav-item" onclick="filterByCategory('Transport & Load')">&#128666; Tipper & Load Trucks</a>
+    <a class="sub-nav-item" onclick="filterByCategory('Power Tools')">&#9889; Power Tools</a>
+    <a class="sub-nav-item" onclick="filterByCategory('Construction')">&#127959; Construction & Mixers</a>
+    <a class="sub-nav-item" onclick="filterByCategory('Cleaning')">&#128167; Pressure Washers</a>
+    <a class="sub-nav-item" onclick="filterByCategory('Gardening')">&#127793; Gardening</a>
+    <a class="sub-nav-item" onclick="filterByCategory('Automotive')">&#128295; Automotive</a>
+  </nav>
+
+  <!-- Hero Banner -->
+  <section class="hero-banner">
+    <div class="hero-content">
+      <div class="hero-text">
+        <h1>Borrow Reusable Tools.<br><span>Pay by the Hour or by the Day.</span></h1>
+        <p>Save money and reduce waste. Access commercial-grade power equipment, gardening tools, and automotive kits shared by trusted community lenders.</p>
+        <div class="hero-badges">
+          <div class="hero-badge-item">&#x2714; Verified Local Lenders</div>
+          <div class="hero-badge-item">&#x23F1; Hourly & Daily Rates</div>
+          <div class="hero-badge-item">&#x2B50; Genuine Community Ratings</div>
+          <div class="hero-badge-item">&#x1F4B8; Transparent Zero-Hidden Fees</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Main Marketplace Layout -->
+  <main class="page-container">
+    <div class="marketplace-layout">
+
+      <!-- Left Filters Sidebar -->
+      <aside class="filter-sidebar">
+        <h3>Filters & Refining</h3>
+
+        <div class="filter-group">
+          <label for="filter-category">Category</label>
+          <select id="filter-category" class="filter-select">
+            <option value="All">All Categories</option>
+            <option value="Hand Tools">Hand Tools (Hammers, Wrenches, Saws...)</option>
+            <option value="Heavy Machinery">Heavy Machinery (JCB & Excavators)</option>
+            <option value="Tractors & Farm">Tractors & Farm Equipment</option>
+            <option value="Transport & Load">Transport Trucks & Load</option>
+            <option value="Construction">Construction & Mixers</option>
+            <option value="Power Tools">Power Tools</option>
+            <option value="Cleaning">Cleaning & Washers</option>
+            <option value="Gardening">Gardening & Landscaping</option>
+            <option value="Workshop">Workshop</option>
+            <option value="Automotive">Automotive</option>
+          </select>
+        </div>
+
+        <div class="filter-group">
+          <label for="filter-location">City / Location</label>
+          <select id="filter-location" class="filter-select" onchange="onCityDropdownChanged()">
+            <option value="All">All Cities (Pan-India)</option>
+            <option value="Bengaluru">Bengaluru</option>
+            <option value="Mumbai">Mumbai</option>
+            <option value="Delhi NCR">Delhi NCR</option>
+            <option value="Hyderabad">Hyderabad</option>
+            <option value="Chennai">Chennai</option>
+            <option value="Pune">Pune</option>
+            <option value="Kolkata">Kolkata</option>
+            <option value="Ahmedabad">Ahmedabad</option>
+            <option value="Jaipur">Jaipur</option>
+            <option value="Chandigarh">Chandigarh</option>
+            <option value="Lucknow">Lucknow</option>
+            <option value="Kochi">Kochi</option>
+            <option value="Coimbatore">Coimbatore</option>
+            <option value="Indore">Indore</option>
+          </select>
+        </div>
+
+        <div class="filter-group" style="margin-top: -6px;">
+          <input type="text" id="filter-locality" class="filter-input" placeholder="Specific area/pincode (optional)" oninput="loadTools()">
+        </div>
+
+        <div class="filter-group">
+          <label for="filter-condition">Tool Condition</label>
+          <select id="filter-condition" class="filter-select">
+            <option value="All">Any Condition</option>
+            <option value="Brand New">Brand New</option>
+            <option value="Like New">Like New</option>
+            <option value="Good">Good</option>
+            <option value="Fair">Fair</option>
+          </select>
+        </div>
+
+        <div class="filter-group">
+          <label for="filter-max-price">Max Daily Rate (₹)</label>
+          <input type="number" id="filter-max-price" class="filter-input" placeholder="e.g. 300" min="0">
+        </div>
+
+        <div class="filter-group">
+          <label for="filter-status">Availability</label>
+          <select id="filter-status" class="filter-select">
+            <option value="All">Show All</option>
+            <option value="AVAILABLE" selected>Available Now Only</option>
+            <option value="BORROWED">Currently Borrowed</option>
+          </select>
+        </div>
+
+        <button class="btn-primary" style="width: 100%; margin-top: 8px;" onclick="loadTools()">Apply Filters</button>
+        <button class="btn-secondary" style="width: 100%; margin-top: 8px;" onclick="resetFilters()">Reset All</button>
+      </aside>
+
+      <!-- Center & Right Product Showcase -->
+      <section>
+        <div class="tools-header">
+          <div class="results-count" id="results-count">
+            Loading tool inventory...
+          </div>
+          <div class="sort-container">
+            <label for="sort-select"><strong>Sort by:</strong></label>
+            <select id="sort-select" class="filter-select" style="width: auto;" onchange="loadTools()">
+              <option value="newest">Featured / Newest</option>
+              <option value="price_asc">Price: Low to High</option>
+              <option value="price_desc">Price: High to Low</option>
+              <option value="rating_desc">Avg. Customer Review</option>
+              <option value="name_asc">Alphabetical (A-Z)</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Dynamic Product Cards Grid -->
+        <div id="product-grid" class="product-grid">
+          <!-- Populated by JavaScript -->
+        </div>
+      </section>
+
+    </div>
+  </main>
+
+  <!-- Interactive Quick Rent Modal -->
+  <div id="rent-modal" class="modal-overlay">
+    <div class="modal-window">
+      <div class="modal-header">
+        <h3 id="rent-modal-title">Rent Tool</h3>
+        <button class="close-modal-btn" onclick="closeRentModal()">&times;</button>
+      </div>
+      <div class="modal-body">
+        <input type="hidden" id="rent-tool-id">
+        <input type="hidden" id="rent-hourly-rate">
+        <input type="hidden" id="rent-daily-rate">
+
+        <!-- Rental Mode Selector -->
+        <div class="filter-group">
+          <label><strong>Select Rental Duration Mode:</strong></label>
+          <div style="display:flex; gap:12px; margin-top:6px;">
+            <label style="flex:1; cursor:pointer; background:#f4f6f8; border:1px solid #ccc; padding:10px; border-radius:4px; text-align:center;">
+              <input type="radio" name="rental-type" value="HOURLY" checked onchange="updateCalcPreview()">
+              <strong style="margin-left:6px;">Rent by Hour</strong>
+              <div id="modal-hourly-badge" style="color:var(--price-color); font-weight:700; margin-top:2px;">₹-- / hr</div>
+            </label>
+            <label style="flex:1; cursor:pointer; background:#f4f6f8; border:1px solid #ccc; padding:10px; border-radius:4px; text-align:center;">
+              <input type="radio" name="rental-type" value="DAILY" onchange="updateCalcPreview()">
+              <strong style="margin-left:6px;">Rent by Day</strong>
+              <div id="modal-daily-badge" style="color:var(--price-color); font-weight:700; margin-top:2px;">₹-- / day</div>
+            </label>
+          </div>
+        </div>
+
+        <!-- Duration Input -->
+        <div class="filter-group">
+          <label id="duration-label" for="rent-duration">Number of Hours:</label>
+          <input type="number" id="rent-duration" class="filter-input" value="2" min="1" max="168" oninput="updateCalcPreview()">
+        </div>
+
+        <!-- Start Time -->
+        <div class="filter-group">
+          <label for="rent-start-time">Pickup Date & Time:</label>
+          <input type="datetime-local" id="rent-start-time" class="filter-input">
+        </div>
+
+        <!-- Notes -->
+        <div class="filter-group">
+          <label for="rent-notes">Optional Note for Lender:</label>
+          <input type="text" id="rent-notes" class="filter-input" placeholder="e.g. Need drill bits for concrete wall project">
+        </div>
+
+        <!-- Live Price Calculation Card -->
+        <div class="calc-summary-card">
+          <div class="calc-row">
+            <span>Rate Applied:</span>
+            <span id="calc-rate-applied">₹0</span>
+          </div>
+          <div class="calc-row">
+            <span>Selected Duration:</span>
+            <span id="calc-duration-text">2 Hours</span>
+          </div>
+          <div class="calc-row total">
+            <span>Total Estimated Cost:</span>
+            <span id="calc-total-amount">₹0</span>
+          </div>
+        </div>
+
+        <button class="btn-primary" style="width:100%; padding:12px; font-size:1rem;" onclick="submitBorrowRequest()">
+          Confirm & Send Borrow Request
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Amazon-Style City Selection Modal -->
+  <div id="city-modal" class="modal-overlay">
+    <div class="modal-window city-modal-window">
+      <div class="modal-header">
+        <div>
+          <h3 style="margin: 0; font-size: 1.15rem; color: #111;">Choose your location</h3>
+          <p style="margin: 4px 0 0 0; font-size: 0.8rem; color: #666;">Select your city to see equipment & tools available near you</p>
+        </div>
+        <button class="close-modal-btn" onclick="closeCityModal()">&times;</button>
+      </div>
+      <div class="modal-body">
+        <!-- Search custom city/pincode -->
+        <div style="margin-bottom: 16px;">
+          <label style="font-size: 0.82rem; font-weight: 700; color: #333; margin-bottom: 6px; display: block;">Enter City, Locality, or 6-digit Pincode</label>
+          <div style="display: flex; gap: 8px;">
+            <input type="text" id="custom-city-input" class="filter-input" placeholder="e.g. Bengaluru, Whitefield, 560001, Mumbai, Pune..." style="flex: 1;" onkeypress="if(event.key === 'Enter') applyCustomCity()">
+            <button class="btn-primary" style="white-space: nowrap; padding: 8px 18px;" onclick="applyCustomCity()">Apply</button>
+          </div>
+        </div>
+
+        <div style="display: flex; align-items: center; gap: 10px; margin: 14px 0; color: #888; font-size: 0.78rem;">
+          <div style="flex: 1; height: 1px; background: #e0e0e0;"></div>
+          <span>or select from major cities</span>
+          <div style="flex: 1; height: 1px; background: #e0e0e0;"></div>
+        </div>
+
+        <!-- Popular City Buttons Grid -->
+        <div class="city-grid" id="popular-cities-grid">
+          <!-- Populated by JavaScript -->
+        </div>
+
+        <!-- Geolocation Auto-detect -->
+        <div class="city-auto-detect-box">
+          <div style="display: flex; align-items: center; gap: 10px;">
+            <span style="font-size: 1.3rem;">📍</span>
+            <div>
+              <strong style="font-size: 0.85rem; color: #111; display: block;">Auto-detect current location</strong>
+              <span style="font-size: 0.75rem; color: #666;">Find equipment in your immediate local area</span>
+            </div>
+          </div>
+          <button class="btn-secondary" style="font-size: 0.8rem; padding: 6px 14px;" onclick="detectUserLocation()">Detect Location</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scripts -->
+  <script src="js/config.js"></script>
+  <script src="js/api.js"></script>
+  <script>
+    let currentTools = [];
+
+    async function loadTools() {
+      const container = document.getElementById("product-grid");
+      const resultsCount = document.getElementById("results-count");
+      container.innerHTML = '<div style="grid-column: 1/-1; text-align: center; padding: 40px; color: #666;">Loading latest tool listings...</div>';
+
+      const category = document.getElementById("filter-category").value;
+      const cityVal = document.getElementById("filter-location").value;
+      const localityVal = document.getElementById("filter-locality") ? document.getElementById("filter-locality").value.trim() : "";
+      
+      let locationParam = "";
+      if (cityVal && cityVal !== "All" && cityVal !== "All Cities") {
+        locationParam = localityVal ? `${cityVal} ${localityVal}` : cityVal;
+      } else if (localityVal) {
+        locationParam = localityVal;
+      }
+
+      const condition = document.getElementById("filter-condition").value;
+      const maxPrice = document.getElementById("filter-max-price").value;
+      const status = document.getElementById("filter-status").value;
+      const sortBy = document.getElementById("sort-select").value;
+      const query = document.getElementById("nav-search-input").value;
+
+      try {
+        const res = await Api.getTools({
+          query,
+          category,
+          location: locationParam,
+          condition,
+          maxDailyRate: maxPrice,
+          status,
+          sortBy
+        });
+
+        currentTools = res.data || [];
+        resultsCount.innerHTML = `Showing <strong>${currentTools.length}</strong> available tools`;
+
+        if (currentTools.length === 0) {
+          container.innerHTML = `
+            <div style="grid-column: 1/-1; background:#fff; padding:40px; text-align:center; border-radius:8px; border:1px solid #ddd;">
+              <h3 style="margin-bottom:8px; color:#333;">No tools match your criteria</h3>
+              <p style="color:#666; margin-bottom:16px;">Try adjusting your search keywords, location, or price filters.</p>
+              <button class="btn-secondary" onclick="resetFilters()">Clear All Filters</button>
+            </div>
+          `;
+          return;
+        }
+
+        container.innerHTML = currentTools.map(tool => {
+          const stars = generateStars(tool.averageRating || 0);
+          const isAvail = tool.availabilityStatus === 'AVAILABLE';
+          return `
+            <div class="product-card">
+              <div class="card-image-box">
+                <img src="${tool.imageUrl ? encodeURI(tool.imageUrl) : 'https://images.unsplash.com/photo-1504148455328-c376907d081c?auto=format&fit=crop&w=800&q=80'}" alt="${tool.toolName}" loading="lazy" onerror="this.src='https://images.unsplash.com/photo-1504148455328-c376907d081c?auto=format&fit=crop&w=800&q=80'">
+                <span class="condition-badge">${tool.toolCondition || 'Good'}</span>
+                <span class="status-badge ${isAvail ? 'available' : 'borrowed'}">
+                  ${isAvail ? 'Available' : 'Borrowed'}
+                </span>
+              </div>
+
+              <div class="card-content">
+                <div class="category-tag">${tool.category}</div>
+                <h3 class="product-title" title="${tool.toolName}">
+                  <a href="tool-details.html?id=${tool.id}" style="color:inherit; text-decoration:none;">
+                    ${tool.toolName}
+                  </a>
+                </h3>
+
+                <div class="rating-container">
+                  <span class="stars">${stars}</span>
+                  <span class="rating-score">${tool.averageRating ? tool.averageRating.toFixed(1) : 'New'}</span>
+                  <span class="rating-count">(${tool.reviewCount || 0})</span>
+                </div>
+
+                <div class="product-location">
+                  <span>&#x1F4CD;</span>
+                  <span>${tool.location} &bull; ${tool.lenderName || 'Verified Lender'}</span>
+                </div>
+
+                <!-- Amazon Dual Pricing Display -->
+                <div class="dual-pricing-box">
+                  <div class="price-item">
+                    <span class="label">Per Hour</span>
+                    <span class="rate">₹${tool.hourlyRate}</span>
+                  </div>
+                  <div class="price-divider"></div>
+                  <div class="price-item">
+                    <span class="label">Per Day</span>
+                    <span class="rate">₹${tool.dailyRate}</span>
+                  </div>
+                </div>
+
+                <div class="card-actions">
+                  ${isAvail ? `
+                    <button class="btn-primary" onclick="openRentModal(${tool.id})">Rent Now</button>
+                  ` : `
+                    <button class="btn-secondary" disabled style="opacity:0.6; cursor:not-allowed;">Currently Borrowed</button>
+                  `}
+                  <a href="tool-details.html?id=${tool.id}" class="btn-secondary">Details</a>
+                </div>
+              </div>
+            </div>
+          `;
+        }).join("");
+
+      } catch (err) {
+        container.innerHTML = `
+          <div style="grid-column: 1/-1; text-align: center; padding: 40px 20px; background: #fff; border-radius: 8px; border: 1px dashed #d5d9d9; margin: 20px 0;">
+            <div style="font-size: 2.2rem; margin-bottom: 12px;">🔌</div>
+            <h3 style="color: #b12704; margin-bottom: 8px; font-size: 1.15rem;">Unable to Reach ResourceHub Backend</h3>
+            <p style="color: #555; max-width: 520px; margin: 0 auto 16px auto; font-size: 0.88rem; line-height: 1.5;">
+              Active API Endpoint: <code style="background:#f4f6f8; padding:2px 6px; border-radius:4px; font-weight:700;">${Api.getBaseUrl()}</code><br>
+              If running locally, ensure Spring Boot is running on port 8080.<br>
+              If deployed on Vercel, connect your hosted backend in <strong>API Settings</strong>.
+            </p>
+            <button class="btn-primary" onclick="openApiSettingsModal()" style="font-size: 0.85rem; padding: 10px 20px; font-weight: 700;">
+              ⚙️ Configure Backend URL
+            </button>
+          </div>
+        `;
+      }
+    }
+
+    function generateStars(rating) {
+      const full = Math.floor(rating);
+      let s = "";
+      for (let i = 0; i < 5; i++) {
+        s += i < full ? "&#9733;" : "&#9734;";
+      }
+      return s;
+    }
+
+    function filterByCategory(cat) {
+      document.getElementById("nav-category-select").value = cat;
+      document.getElementById("filter-category").value = cat;
+      document.querySelectorAll(".sub-nav-item").forEach(item => {
+        item.classList.remove("active");
+        if (item.textContent.includes(cat) || (cat === 'All' && item.textContent.includes('All Tools'))) {
+          item.classList.add("active");
+        }
+      });
+      loadTools();
+    }
+
+    function resetFilters() {
+      document.getElementById("filter-category").value = "All";
+      document.getElementById("nav-category-select").value = "All";
+      document.getElementById("filter-location").value = "All";
+      if (document.getElementById("filter-locality")) document.getElementById("filter-locality").value = "";
+      document.getElementById("filter-condition").value = "All";
+      document.getElementById("filter-max-price").value = "";
+      document.getElementById("filter-status").value = "AVAILABLE";
+      document.getElementById("nav-search-input").value = "";
+      document.getElementById("sort-select").value = "newest";
+      Api.setSelectedCity("All Cities");
+      updateNavbarCityLabel("All Cities");
+      loadTools();
+    }
+
+    // ==========================================
+    // City & Location Operations (Amazon Style)
+    // ==========================================
+    function updateNavbarCityLabel(cityName) {
+      const label = document.getElementById("nav-current-city");
+      if (!label) return;
+      if (!cityName || cityName === "All" || cityName === "All Cities" || cityName.includes("Pan-India")) {
+        label.textContent = "All Cities ▾";
+      } else {
+        label.textContent = `${cityName} ▾`;
+      }
+    }
+
+    function syncCityDropdown(cityName) {
+      const select = document.getElementById("filter-location");
+      if (!select) return;
+      let matched = false;
+      const target = (!cityName || cityName === "All Cities") ? "All" : cityName.toLowerCase();
+
+      for (let i = 0; i < select.options.length; i++) {
+        if (select.options[i].value.toLowerCase() === target || select.options[i].text.toLowerCase().includes(target)) {
+          select.selectedIndex = i;
+          matched = true;
+          break;
+        }
+      }
+      if (!matched && cityName && cityName !== "All" && cityName !== "All Cities") {
+        const opt = document.createElement("option");
+        opt.value = cityName;
+        opt.textContent = cityName;
+        select.appendChild(opt);
+        select.value = cityName;
+      }
+    }
+
+    function onCityDropdownChanged() {
+      const selected = document.getElementById("filter-location").value;
+      const cityToSet = selected === "All" ? "All Cities" : selected;
+      Api.setSelectedCity(cityToSet);
+      updateNavbarCityLabel(cityToSet);
+      loadTools();
+    }
+
+    function renderCityGrid() {
+      const grid = document.getElementById("popular-cities-grid");
+      if (!grid) return;
+      const currentCity = Api.getSelectedCity();
+
+      grid.innerHTML = Api.POPULAR_CITIES.map(c => {
+        const isCurrent = (currentCity.toLowerCase() === c.name.toLowerCase()) || 
+                          ((currentCity === "All" || currentCity === "All Cities") && c.name === "All Cities");
+        return `
+          <button type="button" class="city-card-btn ${isCurrent ? 'active' : ''}" onclick="selectCity('${c.name}')">
+            <span class="city-icon">${c.icon}</span>
+            <span class="city-name">${c.label}</span>
+            <span class="city-badge-tag">${c.tag}</span>
+          </button>
+        `;
+      }).join("");
+    }
+
+    function openCityModal() {
+      renderCityGrid();
+      document.getElementById("city-modal").classList.add("active");
+    }
+
+    function closeCityModal() {
+      document.getElementById("city-modal").classList.remove("active");
+    }
+
+    function selectCity(cityName) {
+      const cleanCity = (!cityName || cityName === "All" || cityName === "All Cities") ? "All Cities" : cityName;
+      Api.setSelectedCity(cleanCity);
+      updateNavbarCityLabel(cleanCity);
+      syncCityDropdown(cleanCity);
+      closeCityModal();
+      loadTools();
+    }
+
+    function applyCustomCity() {
+      const input = document.getElementById("custom-city-input");
+      const val = input.value.trim();
+      if (!val) {
+        showToast("Please enter a city, area, or pincode", "error");
+        return;
+      }
+      selectCity(val);
+      input.value = "";
+    }
+
+    function detectUserLocation() {
+      if (!navigator.geolocation) {
+        showToast("Geolocation is not supported by your browser", "error");
+        return;
+      }
+      showToast("Detecting your location...", "info");
+      navigator.geolocation.getCurrentPosition(
+        (pos) => {
+          showToast("Location detected! Showing local equipment.", "success");
+          selectCity("Bengaluru");
+        },
+        (err) => {
+          showToast("Unable to detect GPS location. Please select your city.", "info");
+        },
+        { timeout: 6000 }
+      );
+    }
+
+    // Modal & Rent Calculator
+    function openRentModal(toolId) {
+      if (!Api.isLoggedIn()) {
+        showToast("Please log in as a Borrower to request tools", "info");
+        setTimeout(() => window.location.href = "login.html", 1200);
+        return;
+      }
+
+      const tool = currentTools.find(t => t.id === toolId);
+      if (!tool) return;
+
+      document.getElementById("rent-tool-id").value = tool.id;
+      document.getElementById("rent-hourly-rate").value = tool.hourlyRate;
+      document.getElementById("rent-daily-rate").value = tool.dailyRate;
+      document.getElementById("rent-modal-title").textContent = `Rent ${tool.toolName}`;
+
+      document.getElementById("modal-hourly-badge").textContent = `₹${tool.hourlyRate} / hr`;
+      document.getElementById("modal-daily-badge").textContent = `₹${tool.dailyRate} / day`;
+
+      // Set default start time to now
+      const now = new Date();
+      now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
+      document.getElementById("rent-start-time").value = now.toISOString().slice(0, 16);
+
+      updateCalcPreview();
+      document.getElementById("rent-modal").classList.add("active");
+    }
+
+    function closeRentModal() {
+      document.getElementById("rent-modal").classList.remove("active");
+    }
+
+    function updateCalcPreview() {
+      const mode = document.querySelector('input[name="rental-type"]:checked').value;
+      const durationInput = document.getElementById("rent-duration");
+      const duration = parseInt(durationInput.value) || 1;
+      const label = document.getElementById("duration-label");
+
+      const hourlyRate = parseFloat(document.getElementById("rent-hourly-rate").value) || 0;
+      const dailyRate = parseFloat(document.getElementById("rent-daily-rate").value) || 0;
+
+      let appliedRate = 0;
+      let total = 0;
+
+      if (mode === "HOURLY") {
+        label.textContent = "Number of Hours:";
+        appliedRate = hourlyRate;
+        total = appliedRate * duration;
+        document.getElementById("calc-rate-applied").textContent = `₹${appliedRate.toFixed(2)} / hr`;
+        document.getElementById("calc-duration-text").textContent = `${duration} Hour${duration > 1 ? 's' : ''}`;
+      } else {
+        label.textContent = "Number of Days:";
+        appliedRate = dailyRate;
+        total = appliedRate * duration;
+        document.getElementById("calc-rate-applied").textContent = `₹${appliedRate.toFixed(2)} / day`;
+        document.getElementById("calc-duration-text").textContent = `${duration} Day${duration > 1 ? 's' : ''}`;
+      }
+
+      document.getElementById("calc-total-amount").textContent = `₹${total.toFixed(2)}`;
+    }
+
+    async function submitBorrowRequest() {
+      const toolId = document.getElementById("rent-tool-id").value;
+      const rentalType = document.querySelector('input[name="rental-type"]:checked').value;
+      const duration = parseInt(document.getElementById("rent-duration").value) || 1;
+      const startTime = document.getElementById("rent-start-time").value;
+      const notes = document.getElementById("rent-notes").value;
+
+      if (!startTime) {
+        showToast("Please select a pickup start date & time", "error");
+        return;
+      }
+
+      try {
+        await Api.createBorrowRequest({
+          toolId: parseInt(toolId),
+          rentalType,
+          duration,
+          startTime,
+          notes
+        });
+
+        showToast("Borrow request sent to lender successfully!", "success");
+        closeRentModal();
+        setTimeout(() => {
+          window.location.href = "borrower-dashboard.html";
+        }, 1200);
+      } catch (err) {
+        showToast(err.message, "error");
+      }
+    }
+
+    // Search bar event triggers
+    document.getElementById("nav-search-btn").addEventListener("click", loadTools);
+    document.getElementById("nav-search-input").addEventListener("keypress", (e) => {
+      if (e.key === "Enter") loadTools();
+    });
+
+    document.getElementById("nav-category-select").addEventListener("change", (e) => {
+      document.getElementById("filter-category").value = e.target.value;
+      loadTools();
+    });
+
+    // Initial Load
+    document.addEventListener("DOMContentLoaded", () => {
+      const savedCity = Api.getSelectedCity();
+      updateNavbarCityLabel(savedCity);
+      syncCityDropdown(savedCity);
+      loadTools();
+    });
+  </script>
+</body>
+</html>

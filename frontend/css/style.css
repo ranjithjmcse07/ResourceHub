@@ -1,0 +1,1350 @@
+/* ==========================================================================
+   ResourceHub - Equipment Rental & Tool Circulation Stylesheet
+   Modern, responsive, accessible, with rich micro-animations
+   ========================================================================== */
+
+:root {
+  /* Amazon-inspired Palette */
+  --nav-bg: #131921;
+  --nav-sub-bg: #232f3e;
+  --nav-border: #3a4553;
+  --accent-amber: #f3a847;
+  --accent-orange: #ff9900;
+  --accent-hover: #e68a00;
+  --accent-blue: #007185;
+  --accent-blue-hover: #004b57;
+  --price-color: #b12704;
+  --price-green: #067d62;
+
+  /* Surfaces & Neutrals */
+  --bg-main: #eaeded;
+  --bg-card: #ffffff;
+  --bg-surface-alt: #f7fafa;
+  --text-main: #0f1111;
+  --text-muted: #565959;
+  --text-light: #ffffff;
+  --border-color: #d5d9d9;
+  --border-light: #e7e7e7;
+
+  /* Status Colors */
+  --status-available: #067d62;
+  --status-borrowed: #c45500;
+  --status-pending: #b8860b;
+  --status-danger: #b12704;
+
+  /* Shadows */
+  --shadow-sm: 0 1px 3px rgba(0,0,0,0.08);
+  --shadow-md: 0 4px 12px rgba(0,0,0,0.1);
+  --shadow-lg: 0 8px 24px rgba(0,0,0,0.15);
+
+  /* Radius & Transitions */
+  --radius-sm: 4px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+  --transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  background-color: var(--bg-main);
+  color: var(--text-main);
+  line-height: 1.5;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ==========================================================================
+   Navigation Bar (Amazon Top Bar Style)
+   ========================================================================== */
+
+.top-navbar {
+  background-color: var(--nav-bg);
+  color: var(--text-light);
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 10px 24px;
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+}
+
+.brand-logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  text-decoration: none;
+  color: var(--text-light);
+  font-size: 1.35rem;
+  font-weight: 800;
+  letter-spacing: -0.5px;
+  padding: 4px 8px;
+  border: 1px solid transparent;
+  border-radius: var(--radius-sm);
+  transition: var(--transition);
+}
+
+.brand-logo:hover {
+  border-color: rgba(255, 255, 255, 0.4);
+}
+
+.brand-logo-img {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  object-fit: cover;
+  display: block;
+  flex-shrink: 0;
+  background: #ffffff;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.35);
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), border-color 0.2s ease;
+}
+
+.brand-logo:hover .brand-logo-img {
+  transform: scale(1.1) rotate(15deg);
+  border-color: #22c55e;
+}
+
+.brand-logo .brand-text {
+  display: flex;
+  align-items: center;
+  line-height: 1;
+  font-weight: 800;
+  color: #ffffff;
+}
+
+.brand-logo span.highlight {
+  color: #22c55e;
+}
+
+.brand-icon {
+  background: var(--accent-orange);
+  color: var(--nav-bg);
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-sm);
+  font-weight: 900;
+  font-size: 1.1rem;
+}
+
+.location-badge {
+  display: flex;
+  flex-direction: column;
+  font-size: 0.75rem;
+  color: #ccc;
+  padding: 6px 10px;
+  border: 1px solid transparent;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.location-badge strong {
+  color: #fff;
+  font-size: 0.85rem;
+}
+
+.location-badge:hover {
+  border-color: #fff;
+}
+
+/* Search Bar in Navbar */
+.nav-search-container {
+  flex: 1;
+  display: flex;
+  max-width: 800px;
+  height: 40px;
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+}
+
+.nav-search-container:focus-within {
+  box-shadow: 0 0 0 3px var(--accent-orange);
+}
+
+.search-category-select {
+  background-color: #e6e6e6;
+  border: none;
+  padding: 0 12px;
+  font-size: 0.85rem;
+  color: #333;
+  cursor: pointer;
+  border-right: 1px solid #ccc;
+  outline: none;
+}
+
+.search-input {
+  flex: 1;
+  border: none;
+  padding: 0 14px;
+  font-size: 0.95rem;
+  outline: none;
+}
+
+.search-button {
+  background-color: var(--accent-amber);
+  border: none;
+  width: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.search-button:hover {
+  background-color: var(--accent-orange);
+}
+
+.search-button svg {
+  width: 20px;
+  height: 20px;
+  fill: #111;
+}
+
+/* Nav Actions Right */
+.nav-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.nav-link-btn {
+  color: #fff;
+  text-decoration: none;
+  padding: 6px 10px;
+  border: 1px solid transparent;
+  border-radius: var(--radius-sm);
+  font-size: 0.85rem;
+  display: flex;
+  flex-direction: column;
+  transition: var(--transition);
+}
+
+.nav-link-btn span.subtext {
+  color: #ccc;
+  font-size: 0.72rem;
+}
+
+.nav-link-btn strong {
+  font-size: 0.88rem;
+}
+
+.nav-link-btn:hover {
+  border-color: #fff;
+}
+
+.role-pill {
+  background-color: var(--accent-orange);
+  color: #111;
+  font-size: 0.7rem;
+  font-weight: 800;
+  padding: 2px 6px;
+  border-radius: 10px;
+  text-transform: uppercase;
+  margin-left: 4px;
+}
+
+/* Secondary Sub-Navbar */
+.sub-navbar {
+  background-color: var(--nav-sub-bg);
+  color: var(--text-light);
+  display: flex;
+  align-items: center;
+  padding: 0 24px;
+  height: 38px;
+  gap: 20px;
+  font-size: 0.88rem;
+  overflow-x: auto;
+  white-space: nowrap;
+}
+
+.sub-nav-item {
+  color: #fff;
+  text-decoration: none;
+  padding: 6px 8px;
+  border: 1px solid transparent;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.sub-nav-item:hover, .sub-nav-item.active {
+  border-color: #fff;
+  color: var(--accent-amber);
+}
+
+/* ==========================================================================
+   Hero Banner & Amazon Promo Strip
+   ========================================================================== */
+
+.hero-banner {
+  background: linear-gradient(135deg, #131921 0%, #232f3e 50%, #1a365d 100%);
+  color: #fff;
+  padding: 36px 32px 48px;
+  position: relative;
+  overflow: hidden;
+  box-shadow: inset 0 -40px 60px rgba(0,0,0,0.4);
+}
+
+.hero-content {
+  max-width: 1280px;
+  margin: 0 auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 24px;
+}
+
+.hero-text h1 {
+  font-size: 2.3rem;
+  font-weight: 800;
+  margin-bottom: 8px;
+  line-height: 1.2;
+}
+
+.hero-text h1 span {
+  color: var(--accent-orange);
+}
+
+.hero-text p {
+  font-size: 1.05rem;
+  color: #d1d5db;
+  max-width: 600px;
+  margin-bottom: 18px;
+}
+
+.hero-badges {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.hero-badge-item {
+  background: rgba(255, 255, 255, 0.12);
+  backdrop-filter: blur(8px);
+  padding: 6px 14px;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  border: 1px solid rgba(255,255,255,0.2);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+/* ==========================================================================
+   Main Content Layout
+   ========================================================================== */
+
+.page-container {
+  max-width: 1380px;
+  margin: -24px auto 40px;
+  padding: 0 20px;
+  width: 100%;
+  flex: 1;
+  position: relative;
+  z-index: 10;
+}
+
+.marketplace-layout {
+  display: grid;
+  grid-template-columns: 260px 1fr;
+  gap: 20px;
+}
+
+/* Filters Sidebar */
+.filter-sidebar {
+  background-color: var(--bg-card);
+  padding: 20px;
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-sm);
+  border: 1px solid var(--border-color);
+  height: fit-content;
+}
+
+.filter-sidebar h3 {
+  font-size: 1.05rem;
+  font-weight: 700;
+  margin-bottom: 16px;
+  padding-bottom: 8px;
+  border-bottom: 2px solid var(--border-light);
+}
+
+.filter-group {
+  margin-bottom: 20px;
+}
+
+.filter-group label {
+  display: block;
+  font-weight: 600;
+  font-size: 0.85rem;
+  color: var(--text-main);
+  margin-bottom: 8px;
+}
+
+.filter-select, .filter-input {
+  width: 100%;
+  padding: 8px 12px;
+  font-size: 0.9rem;
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-sm);
+  background-color: #fff;
+  outline: none;
+}
+
+.filter-select:focus, .filter-input:focus {
+  border-color: var(--accent-orange);
+  box-shadow: 0 0 0 2px rgba(255, 153, 0, 0.2);
+}
+
+.price-range-inputs {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* ==========================================================================
+   Product Grid & Tool Cards (Amazon E-Commerce Style)
+   ========================================================================== */
+
+.tools-header {
+  background-color: var(--bg-card);
+  padding: 14px 20px;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border-color);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+  box-shadow: var(--shadow-sm);
+}
+
+.results-count {
+  font-size: 0.92rem;
+  color: var(--text-muted);
+}
+
+.results-count strong {
+  color: var(--text-main);
+}
+
+.sort-container {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.88rem;
+}
+
+.product-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 20px;
+}
+
+.product-card {
+  background-color: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  transition: var(--transition);
+  box-shadow: var(--shadow-sm);
+  position: relative;
+}
+
+.product-card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-md);
+  border-color: #b0b8c1;
+}
+
+.card-image-box {
+  width: 100%;
+  height: 220px;
+  position: relative;
+  background-color: #f8f9fa;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.card-image-box img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+}
+
+.product-card:hover .card-image-box img {
+  transform: scale(1.05);
+}
+
+.condition-badge {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  background-color: rgba(19, 25, 33, 0.85);
+  color: #fff;
+  font-size: 0.72rem;
+  font-weight: 700;
+  padding: 4px 8px;
+  border-radius: var(--radius-sm);
+  text-transform: uppercase;
+}
+
+.status-badge {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  font-size: 0.72rem;
+  font-weight: 700;
+  padding: 4px 8px;
+  border-radius: var(--radius-sm);
+  text-transform: uppercase;
+}
+
+.status-badge.available {
+  background-color: #e6f4ea;
+  color: var(--status-available);
+  border: 1px solid #b7e1cd;
+}
+
+.status-badge.borrowed {
+  background-color: #feefe3;
+  color: var(--status-borrowed);
+  border: 1px solid #fedfc8;
+}
+
+.card-content {
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+.category-tag {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--accent-blue);
+  text-transform: uppercase;
+  margin-bottom: 4px;
+}
+
+.product-title {
+  font-size: 1rem;
+  font-weight: 700;
+  line-height: 1.35;
+  margin-bottom: 8px;
+  color: var(--text-main);
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  min-height: 2.7em;
+}
+
+.rating-container {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.82rem;
+  margin-bottom: 10px;
+}
+
+.stars {
+  color: #ffa41c;
+  letter-spacing: 1px;
+}
+
+.rating-score {
+  font-weight: 700;
+  color: var(--text-main);
+}
+
+.rating-count {
+  color: var(--accent-blue);
+}
+
+.product-location {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  margin-bottom: 12px;
+}
+
+/* Amazon Dual Pricing Badge */
+.dual-pricing-box {
+  background-color: #fafbfc;
+  border: 1px solid #eef0f2;
+  border-radius: var(--radius-sm);
+  padding: 10px 12px;
+  margin-bottom: 16px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.price-item {
+  display: flex;
+  flex-direction: column;
+}
+
+.price-item span.label {
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  font-weight: 600;
+  color: var(--text-muted);
+}
+
+.price-item span.rate {
+  font-size: 1.15rem;
+  font-weight: 800;
+  color: var(--price-color);
+}
+
+.price-divider {
+  width: 1px;
+  height: 28px;
+  background-color: #ddd;
+}
+
+.card-actions {
+  display: flex;
+  gap: 8px;
+  margin-top: auto;
+}
+
+.btn-primary {
+  flex: 1;
+  background: linear-gradient(to bottom, #f7dfa5, #f0c14b);
+  border: 1px solid #a88734;
+  color: #111;
+  padding: 8px 12px;
+  font-size: 0.88rem;
+  font-weight: 700;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  text-align: center;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 1px 0 rgba(255,255,255,0.4) inset;
+  transition: var(--transition);
+}
+
+.btn-primary:hover {
+  background: linear-gradient(to bottom, #f5d78e, #eeb933);
+}
+
+.btn-secondary {
+  background: linear-gradient(to bottom, #f7f8fa, #e7e9ec);
+  border: 1px solid #8d9096;
+  color: #111;
+  padding: 8px 12px;
+  font-size: 0.88rem;
+  font-weight: 600;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  text-align: center;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: var(--transition);
+}
+
+.btn-secondary:hover {
+  background: #e0e3e7;
+}
+
+.btn-danger {
+  background: #dc3545;
+  color: #fff;
+  border: none;
+  padding: 6px 12px;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  font-size: 0.85rem;
+}
+
+.btn-danger:hover {
+  background: #bd2130;
+}
+
+/* ==========================================================================
+   Modals
+   ========================================================================== */
+
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(2px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2000;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.25s ease;
+  padding: 20px;
+}
+
+.modal-overlay.active {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.modal-window {
+  background: #fff;
+  width: 100%;
+  max-width: 560px;
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-lg);
+  overflow: hidden;
+  transform: translateY(20px);
+  transition: transform 0.25s ease;
+}
+
+.modal-overlay.active .modal-window {
+  transform: translateY(0);
+}
+
+.modal-header {
+  background: var(--nav-bg);
+  color: #fff;
+  padding: 16px 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.modal-header h3 {
+  font-size: 1.15rem;
+  font-weight: 700;
+}
+
+.close-modal-btn {
+  background: none;
+  border: none;
+  color: #fff;
+  font-size: 1.5rem;
+  cursor: pointer;
+  line-height: 1;
+}
+
+.modal-body {
+  padding: 24px;
+}
+
+/* Live Calculator Box */
+.calc-summary-card {
+  background: #fbfbfb;
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-sm);
+  padding: 14px 18px;
+  margin: 16px 0;
+}
+
+.calc-row {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.9rem;
+  margin-bottom: 6px;
+}
+
+.calc-row.total {
+  font-size: 1.15rem;
+  font-weight: 800;
+  color: var(--price-color);
+  border-top: 1px dashed #ccc;
+  padding-top: 8px;
+  margin-top: 8px;
+}
+
+/* ==========================================================================
+   Dashboard Components & Tables
+   ========================================================================== */
+
+.dashboard-header {
+  background: #fff;
+  padding: 20px 24px;
+  border-radius: var(--radius-md);
+  margin-bottom: 24px;
+  border: 1px solid var(--border-color);
+  box-shadow: var(--shadow-sm);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.kpi-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.kpi-card {
+  background: #fff;
+  padding: 20px;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border-color);
+  box-shadow: var(--shadow-sm);
+  display: flex;
+  flex-direction: column;
+}
+
+.kpi-card .kpi-label {
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  font-weight: 700;
+  margin-bottom: 6px;
+}
+
+.kpi-card .kpi-value {
+  font-size: 1.8rem;
+  font-weight: 800;
+  color: var(--text-main);
+}
+
+.kpi-card.earnings .kpi-value {
+  color: var(--price-green);
+}
+
+.kpi-card.fines .kpi-value {
+  color: var(--price-color);
+}
+
+.data-table-container {
+  background: #fff;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border-color);
+  box-shadow: var(--shadow-sm);
+  overflow: hidden;
+  margin-bottom: 24px;
+}
+
+.table-header {
+  padding: 16px 20px;
+  background: #fafafa;
+  border-bottom: 1px solid var(--border-color);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.data-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9rem;
+}
+
+.data-table th {
+  background: #f4f6f8;
+  color: #333;
+  text-align: left;
+  padding: 12px 16px;
+  font-weight: 700;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.data-table td {
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--border-light);
+  vertical-align: middle;
+}
+
+.data-table tr:hover {
+  background-color: #f9fbfd;
+}
+
+/* ==========================================================================
+   Toasts & Alerts
+   ========================================================================== */
+
+#toast-container {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  z-index: 3000;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.toast {
+  background: #333;
+  color: #fff;
+  padding: 12px 20px;
+  border-radius: var(--radius-sm);
+  box-shadow: var(--shadow-md);
+  font-size: 0.9rem;
+  min-width: 280px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  animation: slideIn 0.3s ease;
+}
+
+.toast.success { background: #067d62; }
+.toast.error { background: #b12704; }
+.toast.info { background: #007185; }
+
+@keyframes slideIn {
+  from { transform: translateX(100%); opacity: 0; }
+  to { transform: translateX(0); opacity: 1; }
+}
+
+/* Responsive adjustments */
+@media (max-width: 900px) {
+  .marketplace-layout {
+    grid-template-columns: 1fr;
+  }
+  .filter-sidebar {
+    margin-bottom: 16px;
+  }
+  .hero-content {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
+
+/* ==========================================================================
+   Multi-City Selection Modal & Badges (Amazon Style)
+   ========================================================================== */
+.city-modal-window {
+  max-width: 580px;
+  width: 95%;
+}
+
+.city-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(125px, 1fr));
+  gap: 10px;
+  max-height: 280px;
+  overflow-y: auto;
+  padding: 6px 2px;
+}
+
+.city-card-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 12px 8px;
+  background: #ffffff;
+  border: 1.5px solid #d5d9d9;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-align: center;
+  user-select: none;
+}
+
+.city-card-btn:hover {
+  border-color: var(--accent-orange);
+  background-color: #fff9f3;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+.city-card-btn.active {
+  border-color: var(--accent-orange);
+  background: #fff3e6;
+  font-weight: 700;
+  box-shadow: 0 0 0 2px rgba(255, 153, 0, 0.35);
+}
+
+.city-card-btn .city-icon {
+  font-size: 1.5rem;
+  margin-bottom: 4px;
+}
+
+.city-card-btn .city-name {
+  font-size: 0.85rem;
+  color: var(--text-dark);
+  font-weight: 600;
+  line-height: 1.2;
+}
+
+.city-card-btn .city-badge-tag {
+  font-size: 0.65rem;
+  color: #666;
+  margin-top: 3px;
+}
+
+.city-card-btn.active .city-name {
+  color: #a85d00;
+}
+
+.city-auto-detect-box {
+  margin-top: 18px;
+  padding: 12px 16px;
+  background: #f0f7f7;
+  border: 1px solid #d0e7e7;
+  border-radius: var(--radius-sm);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+}
+
+/* ==========================================================================
+   User Details Profile Banner & Contact Badges (Lender & Borrower)
+   ========================================================================== */
+.user-profile-banner {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 22px 24px;
+  margin-bottom: 24px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.04);
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 20px;
+  flex-wrap: wrap;
+  transition: var(--transition);
+}
+
+.user-profile-banner:hover {
+  box-shadow: 0 6px 22px rgba(0, 0, 0, 0.07);
+}
+
+.profile-avatar-block {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+}
+
+.profile-avatar-circle {
+  width: 58px;
+  height: 58px;
+  border-radius: 14px;
+  background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+  color: #f59e0b;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.6rem;
+  font-weight: 800;
+  box-shadow: 0 4px 12px rgba(245, 158, 11, 0.2);
+  flex-shrink: 0;
+}
+
+.profile-meta h2 {
+  font-size: 1.25rem;
+  font-weight: 800;
+  color: #0f172a;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 4px;
+}
+
+.profile-role-tag {
+  font-size: 0.72rem;
+  font-weight: 700;
+  padding: 3px 10px;
+  border-radius: 20px;
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+}
+
+.profile-role-tag.borrower {
+  background: #e0f2fe;
+  color: #0369a1;
+}
+
+.profile-role-tag.lender {
+  background: #fef3c7;
+  color: #b45309;
+}
+
+.profile-role-tag.admin {
+  background: #fee2e2;
+  color: #991b1b;
+}
+
+.profile-details-grid {
+  display: flex;
+  gap: 24px;
+  margin-top: 14px;
+  flex-wrap: wrap;
+}
+
+.profile-detail-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.88rem;
+  color: #334155;
+  background: #f8fafc;
+  padding: 8px 14px;
+  border-radius: 8px;
+  border: 1px solid #e2e8f0;
+}
+
+.profile-detail-item a {
+  color: #0284c7;
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.profile-detail-item a:hover {
+  text-decoration: underline;
+}
+
+.profile-detail-icon {
+  font-size: 1rem;
+}
+
+.profile-action-btn {
+  background: #ffffff;
+  border: 1.5px solid #cbd5e1;
+  color: #0f172a;
+  padding: 8px 16px;
+  border-radius: 8px;
+  font-size: 0.86rem;
+  font-weight: 700;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  transition: all 0.2s ease;
+}
+
+.profile-action-btn:hover {
+  border-color: #f59e0b;
+  background: #fffdf5;
+  color: #b45309;
+}
+
+/* Contact Detail Box inside Data Tables */
+.contact-detail-box {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  font-size: 0.82rem;
+}
+
+.contact-name {
+  font-weight: 700;
+  color: #0f172a;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.contact-phone {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  color: #0284c7;
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.contact-phone:hover {
+  text-decoration: underline;
+  color: #0369a1;
+}
+
+.contact-address {
+  font-size: 0.76rem;
+  color: #64748b;
+  line-height: 1.3;
+  max-width: 220px;
+}
+
+.contact-company {
+  font-size: 0.76rem;
+  color: #b45309;
+  font-weight: 600;
+}
+
+/* ==========================================================================
+   Tool Lending & Rental Tracking System Styles
+   ========================================================================== */
+
+.rental-tracking-banner {
+  background: linear-gradient(135deg, #f0fdf4 0%, #e0f2fe 100%);
+  border: 1px solid #bbf7d0;
+  border-radius: var(--radius-md);
+  padding: 14px 20px;
+  margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.grace-period-notice {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 0.86rem;
+  color: #166534;
+}
+
+.grace-period-pill {
+  background: #16a34a;
+  color: #fff;
+  font-weight: 800;
+  font-size: 0.72rem;
+  padding: 4px 10px;
+  border-radius: 999px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.time-tracker-block {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  font-size: 0.8rem;
+}
+
+.time-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: #334155;
+  white-space: nowrap;
+}
+
+.time-row .time-icon {
+  font-size: 0.9rem;
+}
+
+.time-row strong {
+  color: #0f172a;
+}
+
+/* Status & Countdown Badges */
+.countdown-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 4px 10px;
+  border-radius: 6px;
+  font-size: 0.78rem;
+  font-weight: 700;
+  width: fit-content;
+}
+
+.countdown-badge.on-time {
+  background: #dcfce7;
+  color: #15803d;
+  border: 1px solid #86efac;
+}
+
+.countdown-badge.grace {
+  background: #fef3c7;
+  color: #b45309;
+  border: 1px solid #fde68a;
+  animation: pulse-slow 2s infinite ease-in-out;
+}
+
+.countdown-badge.overdue {
+  background: #fee2e2;
+  color: #b91c1c;
+  border: 1px solid #fca5a5;
+  animation: pulse-slow 1.5s infinite ease-in-out;
+}
+
+@keyframes pulse-slow {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.75; }
+}
+
+/* Penalty Pill & Amount */
+.penalty-cell {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.penalty-zero {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  color: #059669;
+  font-weight: 700;
+  font-size: 0.82rem;
+  background: #ecfdf5;
+  padding: 3px 8px;
+  border-radius: 4px;
+  border: 1px solid #a7f3d0;
+  width: fit-content;
+}
+
+.penalty-active {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  color: #b91c1c;
+  font-weight: 800;
+  font-size: 0.85rem;
+  background: #fef2f2;
+  padding: 3px 8px;
+  border-radius: 4px;
+  border: 1px solid #fecaca;
+  width: fit-content;
+}
+
+.penalty-note {
+  font-size: 0.72rem;
+  color: #64748b;
+}
+
+/* Itemized Settlement Modal */
+.settlement-sheet {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  padding: 16px;
+  margin: 16px 0;
+}
+
+.settlement-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 0;
+  border-bottom: 1px dashed #cbd5e1;
+  font-size: 0.88rem;
+  color: #334155;
+}
+
+.settlement-row:last-child {
+  border-bottom: none;
+}
+
+.settlement-row.total-row {
+  padding-top: 12px;
+  font-weight: 800;
+  font-size: 1.05rem;
+  color: #0f172a;
+}
+
+

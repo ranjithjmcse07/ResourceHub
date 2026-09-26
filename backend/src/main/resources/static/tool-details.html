@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tool Details | ResourceHub Equipment Rental</title>
+  <link rel="icon" type="image/png" href="images/Logo-circle.png">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    .details-grid {
+      display: grid;
+      grid-template-columns: 420px 1fr 340px;
+      gap: 32px;
+      background: #fff;
+      padding: 30px;
+      border-radius: var(--radius-md);
+      border: 1px solid var(--border-color);
+      box-shadow: var(--shadow-sm);
+      margin-top: 20px;
+    }
+    .detail-img-box {
+      width: 100%;
+      height: 380px;
+      background: #fdfdfd;
+      border: 1px solid var(--border-light);
+      border-radius: var(--radius-sm);
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .detail-img-box img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    .buy-box {
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      padding: 20px;
+      background: #fafafa;
+      box-shadow: var(--shadow-sm);
+      height: fit-content;
+    }
+    .reviews-section {
+      background: #fff;
+      padding: 30px;
+      border-radius: var(--radius-md);
+      border: 1px solid var(--border-color);
+      margin-top: 24px;
+    }
+    .review-item {
+      padding: 16px 0;
+      border-bottom: 1px solid var(--border-light);
+    }
+    @media (max-width: 1100px) {
+      .details-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Top Navbar -->
+  <header class="top-navbar">
+    <a href="index.html" class="brand-logo" title="ResourceHub">
+      <img src="images/Logo-circle.png" alt="ResourceHub Logo" class="brand-logo-img">
+      <span class="brand-text">Resource<span class="highlight">Hub</span></span>
+    </a>
+
+    <a href="index.html" class="location-badge" title="Deliver or Pickup location - Browse cities" style="text-decoration:none;">
+      <span>Delivering to</span>
+      <strong id="nav-current-city">All Cities ▾</strong>
+    </a>
+
+    <div style="flex: 1;"></div>
+
+    <div class="nav-actions">
+      <a href="index.html" class="nav-link-btn">
+        <span class="subtext">Browse</span>
+        <strong>Marketplace</strong>
+      </a>
+      <div id="nav-account"></div>
+    </div>
+  </header>
+
+  <main class="page-container" style="margin-top: 20px;">
+    <!-- Breadcrumb -->
+    <div style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 12px;">
+      <a href="index.html" style="color: var(--accent-blue); text-decoration: none;">Marketplace</a> &gt; 
+      <span id="breadcrumb-category">Category</span> &gt; 
+      <span id="breadcrumb-title" style="color: var(--text-main); font-weight: 600;">Tool Details</span>
+    </div>
+
+    <!-- 3-Column Amazon Layout -->
+    <div class="details-grid">
+      
+      <!-- Left Column: Tool Image -->
+      <div>
+        <div class="detail-img-box">
+          <img id="detail-image" src="" alt="Tool Preview">
+        </div>
+        <div style="margin-top: 14px; display: flex; gap: 8px;">
+          <span id="detail-condition" class="condition-badge" style="position: static;">Good Condition</span>
+          <span id="detail-status" class="status-badge available" style="position: static;">Available</span>
+        </div>
+      </div>
+
+      <!-- Center Column: Specifications & Description -->
+      <div>
+        <div id="detail-category" class="category-tag">Power Tools</div>
+        <h1 id="detail-name" style="font-size: 1.6rem; font-weight: 800; margin-bottom: 8px;">Loading tool...</h1>
+        
+        <div class="rating-container" style="font-size: 0.95rem; margin-bottom: 16px;">
+          <span id="detail-stars" class="stars">★★★★★</span>
+          <span id="detail-rating-score" class="rating-score">0.0</span>
+          <span id="detail-review-count" class="rating-count">(0 customer ratings)</span>
+        </div>
+
+        <div style="border-top: 1px solid var(--border-light); border-bottom: 1px solid var(--border-light); padding: 14px 0; margin-bottom: 20px;">
+          <div style="display: flex; gap: 24px;">
+            <div>
+              <div style="font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase;">Hourly Rate</div>
+              <div id="detail-hourly-rate" style="font-size: 1.5rem; font-weight: 800; color: var(--price-color);">₹0.00 / hr</div>
+            </div>
+            <div style="border-left: 1px solid #ddd;"></div>
+            <div>
+              <div style="font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase;">Daily Rate</div>
+              <div id="detail-daily-rate" style="font-size: 1.5rem; font-weight: 800; color: var(--price-color);">₹0.00 / day</div>
+            </div>
+          </div>
+        </div>
+
+        <div style="margin-bottom: 20px;">
+          <h3 style="font-size: 1.05rem; font-weight: 700; margin-bottom: 8px;">About This Item</h3>
+          <p id="detail-desc" style="color: #333; line-height: 1.6; white-space: pre-line;"></p>
+        </div>
+
+        <div style="background: #f8fafc; padding: 18px; border-radius: 10px; border: 1.5px solid #e2e8f0; margin-bottom: 20px;">
+          <h4 style="font-size: 0.95rem; font-weight: 800; color: #0f172a; margin-bottom: 10px; display: flex; align-items: center; gap: 6px;">
+            <span>🛠️ Verified Tool Lender Details</span>
+          </h4>
+          <div style="display: flex; flex-direction: column; gap: 8px; font-size: 0.88rem; color: #334155;">
+            <div><strong>Lender Name:</strong> <span id="detail-lender-name">--</span></div>
+            <div><strong>Business / Workshop:</strong> <span id="detail-lender-company">--</span></div>
+            <div><strong>Mobile Contact:</strong> <a id="detail-lender-phone-link" href="#" style="color:#0284c7; font-weight:700;"><span id="detail-lender-phone">--</span></a></div>
+            <div><strong>Pickup Location & City:</strong> <span id="detail-location">--</span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right Column: Amazon Rent Box (Buy Box) -->
+      <div class="buy-box">
+        <div style="font-size: 1.25rem; font-weight: 800; color: var(--price-color); margin-bottom: 6px;">
+          <span id="buybox-rate">₹--</span>
+        </div>
+        <div id="buybox-stock-status" style="color: var(--status-available); font-weight: 700; margin-bottom: 16px;">
+          &#x2714; In Stock &bull; Available for Rent
+        </div>
+
+        <!-- Rent Mode Selection -->
+        <div class="filter-group">
+          <label><strong>Select Duration Mode:</strong></label>
+          <div style="display:flex; gap:8px; margin-top:4px;">
+            <label style="flex:1; cursor:pointer; background:#fff; border:1px solid #ccc; padding:8px; border-radius:4px; font-size:0.85rem; text-align:center;">
+              <input type="radio" name="bb-rental-type" value="HOURLY" checked onchange="updateBuyBoxCalc()"> Hourly
+            </label>
+            <label style="flex:1; cursor:pointer; background:#fff; border:1px solid #ccc; padding:8px; border-radius:4px; font-size:0.85rem; text-align:center;">
+              <input type="radio" name="bb-rental-type" value="DAILY" onchange="updateBuyBoxCalc()"> Daily
+            </label>
+          </div>
+        </div>
+
+        <div class="filter-group">
+          <label id="bb-duration-label" for="bb-duration">Duration (Hours):</label>
+          <input type="number" id="bb-duration" class="filter-input" value="3" min="1" max="168" oninput="updateBuyBoxCalc()">
+        </div>
+
+        <div class="filter-group">
+          <label for="bb-start-time">Pickup Date & Time:</label>
+          <input type="datetime-local" id="bb-start-time" class="filter-input">
+        </div>
+
+        <!-- Live Cost Breakdown -->
+        <div class="calc-summary-card" style="margin: 12px 0;">
+          <div class="calc-row">
+            <span>Rate:</span>
+            <span id="bb-calc-rate">₹0</span>
+          </div>
+          <div class="calc-row">
+            <span>Duration:</span>
+            <span id="bb-calc-duration">3 Hours</span>
+          </div>
+          <div class="calc-row total">
+            <span>Total:</span>
+            <span id="bb-calc-total">₹0</span>
+          </div>
+        </div>
+
+        <button id="bb-rent-btn" class="btn-primary" style="width: 100%; padding: 12px; font-size: 1rem;" onclick="submitBuyBoxRequest()">
+          Rent Now
+        </button>
+      </div>
+
+    </div>
+
+    <!-- Customer Reviews Section -->
+    <section class="reviews-section">
+      <h2 style="font-size: 1.3rem; font-weight: 800; margin-bottom: 20px;">Customer Reviews & Ratings</h2>
+      <div id="reviews-container">
+        <p style="color: var(--text-muted);">Loading reviews...</p>
+      </div>
+    </section>
+  </main>
+
+  <script src="js/config.js"></script>
+  <script src="js/api.js"></script>
+  <script>
+    let currentTool = null;
+
+    async function loadToolDetails() {
+      const urlParams = new URLSearchParams(window.location.search);
+      const toolId = urlParams.get("id");
+
+      if (!toolId) {
+        window.location.href = "index.html";
+        return;
+      }
+
+      try {
+        const res = await Api.getToolById(toolId);
+        currentTool = res.data;
+
+        document.title = `${currentTool.toolName} | ResourceHub`;
+        document.getElementById("breadcrumb-category").textContent = currentTool.category;
+        document.getElementById("breadcrumb-title").textContent = currentTool.toolName;
+
+        document.getElementById("detail-image").src = currentTool.imageUrl ? encodeURI(currentTool.imageUrl) : "https://images.unsplash.com/photo-1504148455328-c376907d081c?auto=format&fit=crop&w=800&q=80";
+        document.getElementById("detail-image").onerror = function() { this.src = "https://images.unsplash.com/photo-1504148455328-c376907d081c?auto=format&fit=crop&w=800&q=80"; };
+        document.getElementById("detail-condition").textContent = currentTool.toolCondition || "Good";
+        
+        const isAvail = currentTool.availabilityStatus === "AVAILABLE";
+        const statusEl = document.getElementById("detail-status");
+        statusEl.className = `status-badge ${isAvail ? 'available' : 'borrowed'}`;
+        statusEl.textContent = isAvail ? "Available" : "Borrowed";
+
+        document.getElementById("detail-category").textContent = currentTool.category;
+        document.getElementById("detail-name").textContent = currentTool.toolName;
+        document.getElementById("detail-desc").textContent = currentTool.description;
+
+        document.getElementById("detail-hourly-rate").textContent = `₹${currentTool.hourlyRate} / hr`;
+        document.getElementById("detail-daily-rate").textContent = `₹${currentTool.dailyRate} / day`;
+
+        document.getElementById("detail-lender-name").textContent = currentTool.lenderName || "Verified Tool Owner";
+        document.getElementById("detail-lender-company").textContent = currentTool.lenderCompany || "Individual Equipment Owner";
+
+        const lenderPhoneEl = document.getElementById("detail-lender-phone");
+        const lenderPhoneLink = document.getElementById("detail-lender-phone-link");
+        if (currentTool.lenderMobile) {
+          lenderPhoneEl.textContent = `+91 ${currentTool.lenderMobile}`;
+          lenderPhoneLink.href = `tel:${currentTool.lenderMobile}`;
+        } else {
+          lenderPhoneEl.textContent = "Verified upon reservation";
+          lenderPhoneLink.removeAttribute("href");
+        }
+
+        document.getElementById("detail-location").textContent = currentTool.location;
+
+        const rating = currentTool.averageRating || 0;
+        document.getElementById("detail-rating-score").textContent = rating.toFixed(1);
+        document.getElementById("detail-review-count").textContent = `(${currentTool.reviewCount || 0} reviews)`;
+        
+        let stars = "";
+        for (let i = 0; i < 5; i++) {
+          stars += i < Math.floor(rating) ? "★" : "☆";
+        }
+        document.getElementById("detail-stars").textContent = stars;
+
+        // Buy box stock status
+        const bbStock = document.getElementById("buybox-stock-status");
+        const bbBtn = document.getElementById("bb-rent-btn");
+        if (isAvail) {
+          bbStock.innerHTML = "&#x2714; In Stock &bull; Available for Rent";
+          bbStock.style.color = "var(--status-available)";
+          bbBtn.disabled = false;
+        } else {
+          bbStock.innerHTML = "&#x2716; Currently Rented / Unavailable";
+          bbStock.style.color = "var(--status-borrowed)";
+          bbBtn.disabled = true;
+          bbBtn.style.opacity = "0.6";
+        }
+
+        // Set start time to now
+        const now = new Date();
+        now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
+        document.getElementById("bb-start-time").value = now.toISOString().slice(0, 16);
+
+        updateBuyBoxCalc();
+        loadToolReviews(toolId);
+      } catch (err) {
+        alert("Failed to load tool: " + err.message);
+        window.location.href = "index.html";
+      }
+    }
+
+    function updateBuyBoxCalc() {
+      if (!currentTool) return;
+      const mode = document.querySelector('input[name="bb-rental-type"]:checked').value;
+      const duration = parseInt(document.getElementById("bb-duration").value) || 1;
+      const label = document.getElementById("bb-duration-label");
+
+      let rate = 0;
+      let total = 0;
+
+      if (mode === "HOURLY") {
+        label.textContent = "Duration (Hours):";
+        rate = parseFloat(currentTool.hourlyRate);
+        total = rate * duration;
+        document.getElementById("buybox-rate").textContent = `₹${rate.toFixed(2)} / hour`;
+        document.getElementById("bb-calc-rate").textContent = `₹${rate.toFixed(2)} / hr`;
+        document.getElementById("bb-calc-duration").textContent = `${duration} Hour${duration > 1 ? 's' : ''}`;
+      } else {
+        label.textContent = "Duration (Days):";
+        rate = parseFloat(currentTool.dailyRate);
+        total = rate * duration;
+        document.getElementById("buybox-rate").textContent = `₹${rate.toFixed(2)} / day`;
+        document.getElementById("bb-calc-rate").textContent = `₹${rate.toFixed(2)} / day`;
+        document.getElementById("bb-calc-duration").textContent = `${duration} Day${duration > 1 ? 's' : ''}`;
+      }
+
+      document.getElementById("bb-calc-total").textContent = `₹${total.toFixed(2)}`;
+    }
+
+    async function submitBuyBoxRequest() {
+      if (!Api.isLoggedIn()) {
+        showToast("Please log in as a Borrower to rent tools", "info");
+        setTimeout(() => window.location.href = "login.html", 1200);
+        return;
+      }
+
+      const rentalType = document.querySelector('input[name="bb-rental-type"]:checked').value;
+      const duration = parseInt(document.getElementById("bb-duration").value) || 1;
+      const startTime = document.getElementById("bb-start-time").value;
+
+      if (!startTime) {
+        showToast("Please select a pickup start date & time", "error");
+        return;
+      }
+
+      try {
+        await Api.createBorrowRequest({
+          toolId: currentTool.id,
+          rentalType,
+          duration,
+          startTime,
+          notes: "Booked directly via Tool Details page"
+        });
+
+        showToast("Borrow request submitted successfully!", "success");
+        setTimeout(() => {
+          window.location.href = "borrower-dashboard.html";
+        }, 1200);
+      } catch (err) {
+        showToast(err.message, "error");
+      }
+    }
+
+    async function loadToolReviews(toolId) {
+      const container = document.getElementById("reviews-container");
+      try {
+        const res = await Api.getToolReviews(toolId);
+        const reviews = res.data || [];
+
+        if (reviews.length === 0) {
+          container.innerHTML = `<p style="color:var(--text-muted);">No reviews yet for this tool. Be the first to borrow and review it!</p>`;
+          return;
+        }
+
+        container.innerHTML = reviews.map(r => {
+          let s = "";
+          for (let i = 0; i < 5; i++) {
+            s += i < r.rating ? "★" : "☆";
+          }
+          return `
+            <div class="review-item">
+              <div style="display:flex; justify-content:space-between; margin-bottom:4px;">
+                <strong>${r.borrowerName || 'Verified Borrower'}</strong>
+                <span style="font-size:0.8rem; color:var(--text-muted);">${r.createdAt ? r.createdAt.slice(0, 10) : ''}</span>
+              </div>
+              <div style="color:#ffa41c; font-size:1.1rem; margin-bottom:6px;">${s}</div>
+              <p style="color:#333; line-height:1.5;">${r.comment}</p>
+            </div>
+          `;
+        }).join("");
+      } catch (err) {
+        container.innerHTML = `<p style="color:red;">Failed to load reviews.</p>`;
+      }
+    }
+
+    document.addEventListener("DOMContentLoaded", () => {
+      const savedCity = Api.getSelectedCity();
+      const cityEl = document.getElementById("nav-current-city");
+      if (cityEl) {
+        cityEl.textContent = (!savedCity || savedCity === "All" || savedCity === "All Cities") ? "All Cities ▾" : `${savedCity} ▾`;
+      }
+      loadToolDetails();
+    });
+  </script>
+</body>
+</html>

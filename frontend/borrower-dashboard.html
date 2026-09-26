@@ -1,0 +1,776 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Borrower Dashboard | ResourceHub</title>
+  <link rel="icon" type="image/png" href="images/Logo-circle.png">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+
+  <!-- Top Navbar -->
+  <header class="top-navbar">
+    <a href="index.html" class="brand-logo" title="ResourceHub">
+      <img src="images/Logo-circle.png" alt="ResourceHub Logo" class="brand-logo-img">
+      <span class="brand-text">Resource<span class="highlight">Hub</span></span>
+    </a>
+    <span class="role-pill" style="font-size:0.85rem; padding:4px 10px;">Borrower Workspace</span>
+    <div style="flex:1;"></div>
+    <div class="nav-actions">
+      <a href="index.html" class="nav-link-btn">
+        <span class="subtext">Rent More</span>
+        <strong>Browse Catalog</strong>
+      </a>
+      <div id="nav-account"></div>
+    </div>
+  </header>
+
+  <main class="page-container" style="margin-top: 24px;">
+    <!-- Welcome Header -->
+    <div class="dashboard-header">
+      <div>
+        <h1 id="welcome-title" style="font-size: 1.5rem; font-weight: 800;">Borrower Dashboard</h1>
+        <p style="color: var(--text-muted); font-size: 0.9rem;">Track your tool rentals, return circulating equipment, and leave feedback</p>
+      </div>
+      <div style="display:flex; gap:10px; align-items:center;">
+        <button class="profile-action-btn" onclick="openProfileEditModal()">
+          <span>✏️ Edit Profile & Address</span>
+        </button>
+        <a href="index.html" class="btn-primary" style="padding: 10px 20px; text-decoration: none;">
+          &#x1F50D; Browse & Rent Tools
+        </a>
+      </div>
+    </div>
+
+    <!-- Verified Borrower Profile & Contact Details Card -->
+    <div class="user-profile-banner" id="borrower-profile-card">
+      <div class="profile-avatar-block">
+        <div class="profile-avatar-circle" id="prof-avatar">🛒</div>
+        <div class="profile-meta">
+          <h2>
+            <span id="prof-name">Borrower Name</span>
+            <span class="profile-role-tag borrower">🛒 Verified Borrower</span>
+          </h2>
+          <div style="font-size:0.83rem; color:#64748b;">
+            User ID: <strong id="prof-username">--</strong> &bull; Status: <span style="color:#059669; font-weight:700;">● Active</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="profile-details-grid">
+        <div class="profile-detail-item" title="Verified Mobile Contact">
+          <span class="profile-detail-icon">📞</span>
+          <div>
+            <div style="font-size:0.7rem; color:#64748b; font-weight:700; text-transform:uppercase;">Mobile Number</div>
+            <a id="prof-mobile-link" href="tel:"><strong id="prof-mobile">--</strong></a>
+          </div>
+        </div>
+
+        <div class="profile-detail-item" title="Verified Delivery Address">
+          <span class="profile-detail-icon">📍</span>
+          <div>
+            <div style="font-size:0.7rem; color:#64748b; font-weight:700; text-transform:uppercase;">Verified Delivery Address</div>
+            <strong id="prof-address" style="color:#1e293b;">--</strong>
+          </div>
+        </div>
+
+        <div class="profile-detail-item" title="Registered Email">
+          <span class="profile-detail-icon">✉️</span>
+          <div>
+            <div style="font-size:0.7rem; color:#64748b; font-weight:700; text-transform:uppercase;">Email Address</div>
+            <strong id="prof-email">--</strong>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- KPI Metric Cards -->
+    <div class="kpi-grid">
+      <div class="kpi-card">
+        <span class="kpi-label">Marketplace Tools</span>
+        <span id="kpi-available-tools" class="kpi-value" style="color: var(--status-available);">--</span>
+      </div>
+      <div class="kpi-card">
+        <span class="kpi-label">Pending Requests</span>
+        <span id="kpi-pending-requests" class="kpi-value">--</span>
+      </div>
+      <div class="kpi-card">
+        <span class="kpi-label">Active Borrowings</span>
+        <span id="kpi-active-loans" class="kpi-value" style="color: var(--status-borrowed);">--</span>
+      </div>
+      <div class="kpi-card">
+        <span class="kpi-label">Completed Loans</span>
+        <span id="kpi-completed-loans" class="kpi-value">--</span>
+      </div>
+      <div class="kpi-card fines">
+        <span class="kpi-label">Total Late Fines</span>
+        <span id="kpi-total-fines" class="kpi-value">₹--</span>
+      </div>
+    </div>
+
+    <!-- 30-Minute Grace Period & Penalty Policy Banner -->
+    <div class="rental-tracking-banner">
+      <div class="grace-period-notice">
+        <span class="grace-period-pill">30-Min Grace Period Protection</span>
+        <span>
+          <strong>On-Time Return Assurance:</strong> You are granted a complimentary <strong>30-minute grace window</strong> after your scheduled return deadline (₹0 penalty). Overdue penalty fees apply only if the tool is returned <strong>more than a half hour (30 minutes)</strong> late.
+        </span>
+      </div>
+      <div style="font-size:0.82rem; color:#1e293b; font-weight:700; background:#fff; padding:6px 12px; border-radius:6px; border:1px solid #cbd5e1;">
+        ⏰ Overdue Fine: ₹10/hr &bull; ₹50/day (Charged after 30 mins)
+      </div>
+    </div>
+
+    <!-- Section 1: Active Borrowings Tracker -->
+    <div class="data-table-container">
+      <div class="table-header" style="justify-content: space-between;">
+        <div style="display:flex; align-items:center; gap:10px;">
+          <h3 style="font-size: 1.15rem; font-weight: 800;">My Current Active Borrowings Tracker</h3>
+          <span id="active-borrowings-badge" class="role-pill" style="background:#0284c7; color:#fff; font-size:0.75rem;">0 Active Loans</span>
+        </div>
+        <small style="color:var(--text-muted); font-size:0.8rem;">● Live auto-tracking updates every 30s</small>
+      </div>
+      <div style="overflow-x: auto;">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Rented Tool</th>
+              <th>Lender Contact & Pickup</th>
+              <th>Rent Duration & Times</th>
+              <th>Live Status & Countdown</th>
+              <th>Rented Price & Late Penalty</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody id="active-borrowings-body">
+            <tr><td colspan="6" style="text-align: center; color: #888; padding:24px;">Loading your active rentals...</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Section 2: All Requests & History -->
+    <div class="data-table-container">
+      <div class="table-header">
+        <h3 style="font-size: 1.1rem; font-weight: 700;">My Rental History & Requests</h3>
+      </div>
+      <div style="overflow-x: auto;">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Tool</th>
+              <th>Dates</th>
+              <th>Rental Mode</th>
+              <th>Total Cost</th>
+              <th>Late Fine</th>
+              <th>Status</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="history-table-body">
+            <tr><td colspan="7" style="text-align: center; color: #888;">Loading rental history...</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Section 3: Submit Suggestion -->
+    <div class="dashboard-header" style="flex-direction: column; align-items: flex-start; gap: 12px;">
+      <h3 style="font-size: 1.1rem; font-weight: 700;">Send Feedback or Suggestion to Admin</h3>
+      <div style="display:flex; width:100%; gap:12px; flex-wrap:wrap;">
+        <input type="text" id="sugg-subject" class="filter-input" placeholder="Subject" style="flex:1; min-width:200px;">
+        <input type="text" id="sugg-message" class="filter-input" placeholder="Your suggestion / feedback..." style="flex:2; min-width:300px;">
+        <button class="btn-primary" onclick="submitSuggestion()">Send Feedback</button>
+      </div>
+    </div>
+  </main>
+
+  <!-- Review Modal -->
+  <div id="review-modal" class="modal-overlay">
+    <div class="modal-window">
+      <div class="modal-header">
+        <h3 id="review-modal-title">Rate & Review Tool</h3>
+        <button class="close-modal-btn" onclick="closeReviewModal()">&times;</button>
+      </div>
+      <div class="modal-body">
+        <input type="hidden" id="rev-tool-id">
+        <input type="hidden" id="rev-request-id">
+
+        <div class="filter-group">
+          <label><strong>Overall Rating:</strong></label>
+          <select id="rev-rating" class="filter-select" style="font-size: 1.1rem; padding: 10px;">
+            <option value="5">★★★★★ (5 Stars - Exceptional)</option>
+            <option value="4">★★★★☆ (4 Stars - Good)</option>
+            <option value="3">★★★☆☆ (3 Stars - Average)</option>
+            <option value="2">★★☆☆☆ (2 Stars - Below Average)</option>
+            <option value="1">★☆☆☆☆ (1 Star - Poor)</option>
+          </select>
+        </div>
+
+        <div class="filter-group">
+          <label for="rev-comment"><strong>Your Review:</strong></label>
+          <textarea id="rev-comment" class="filter-input" rows="4" placeholder="How was the tool condition and borrowing experience?" required></textarea>
+        </div>
+
+        <button class="btn-primary" style="width: 100%; padding: 12px; font-size: 1rem;" onclick="submitReview()">
+          Submit Verified Review
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Edit Profile & Delivery Address Modal -->
+  <div id="profile-edit-modal" class="modal-overlay">
+    <div class="modal-window" style="max-width: 500px;">
+      <div class="modal-header">
+        <h3>Edit Borrower Profile & Delivery Address</h3>
+        <button class="close-modal-btn" onclick="closeProfileEditModal()">&times;</button>
+      </div>
+      <div class="modal-body">
+        <form onsubmit="handleSaveProfile(e)">
+          <div class="filter-group">
+            <label for="edit-fullname"><strong>Full Name *</strong></label>
+            <input type="text" id="edit-fullname" class="filter-input" required>
+          </div>
+
+          <div class="filter-group">
+            <label for="edit-mobile"><strong>Mobile Number * (10 digits)</strong></label>
+            <input type="tel" id="edit-mobile" class="filter-input" pattern="[0-9]{10}" maxlength="10" required placeholder="9876543210">
+          </div>
+
+          <div class="filter-group">
+            <label for="edit-address"><strong>Verified Delivery / Residential Address *</strong></label>
+            <textarea id="edit-address" class="filter-input" rows="3" required minlength="5" placeholder="Building, Street, Area, City & Pincode"></textarea>
+            <small style="color:#64748b; font-size:0.75rem;">This address will be shared with lenders for equipment delivery or physical verification.</small>
+          </div>
+
+          <button type="submit" id="save-profile-btn" class="btn-primary" style="width: 100%; padding: 12px; font-size: 1rem; margin-top: 10px;">
+            Save & Update Profile Details
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Borrower Return Tool & Penalty Breakdown Modal -->
+  <div id="return-tool-modal" class="modal-overlay">
+    <div class="modal-window" style="max-width: 560px;">
+      <div class="modal-header">
+        <h3>Return Equipment & Settle Rental</h3>
+        <button class="close-modal-btn" onclick="closeReturnModal()">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div id="return-modal-content">
+          <!-- Populated dynamically -->
+        </div>
+        <div style="display:flex; gap:12px; margin-top:20px;">
+          <button class="btn-secondary" style="flex:1; padding:12px;" onclick="closeReturnModal()">Cancel</button>
+          <button class="btn-primary" style="flex:2; padding:12px; font-weight:800; font-size:0.95rem;" id="confirm-return-btn" onclick="executeBorrowerReturn()">
+            ✓ Confirm Tool Return
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="js/config.js"></script>
+  <script src="js/api.js"></script>
+  <script>
+    let currentUserData = null;
+
+    const user = Api.getUser();
+    if (!user || user.role !== "BORROWER") {
+      alert("Access Denied: Borrower login required");
+      window.location.href = "login.html";
+    }
+
+    async function loadDashboard() {
+      await loadUserProfile();
+      await Promise.all([loadStats(), loadMyRequests()]);
+    }
+
+    async function loadUserProfile() {
+      try {
+        currentUserData = await Api.getCurrentUser();
+        const u = currentUserData || user;
+
+        document.getElementById("welcome-title").textContent = `Welcome, ${u.fullName || u.username}`;
+        document.getElementById("prof-name").textContent = u.fullName || u.username;
+        document.getElementById("prof-username").textContent = `@${u.username}`;
+
+        const mobileEl = document.getElementById("prof-mobile");
+        const mobileLink = document.getElementById("prof-mobile-link");
+        if (u.mobile) {
+          mobileEl.textContent = `+91 ${u.mobile}`;
+          mobileLink.href = `tel:${u.mobile}`;
+        } else {
+          mobileEl.textContent = "Click to add phone number";
+          mobileLink.href = "javascript:openProfileEditModal()";
+        }
+
+        document.getElementById("prof-address").textContent = u.address || "Click to add delivery address";
+        document.getElementById("prof-email").textContent = u.email || "--";
+      } catch (e) {
+        console.error("Error loading user profile:", e);
+      }
+    }
+
+    function openProfileEditModal() {
+      const u = currentUserData || Api.getUser() || {};
+      document.getElementById("edit-fullname").value = u.fullName || "";
+      document.getElementById("edit-mobile").value = u.mobile || "";
+      document.getElementById("edit-address").value = u.address || "";
+      document.getElementById("profile-edit-modal").classList.add("active");
+    }
+
+    function closeProfileEditModal() {
+      document.getElementById("profile-edit-modal").classList.remove("active");
+    }
+
+    async function handleSaveProfile(e) {
+      if (e) e.preventDefault();
+      const saveBtn = document.getElementById("save-profile-btn");
+      const fullName = document.getElementById("edit-fullname").value.trim();
+      const mobile = document.getElementById("edit-mobile").value.trim();
+      const address = document.getElementById("edit-address").value.trim();
+
+      if (!fullName || !mobile || !address) {
+        showToast("Please fill in all required profile fields", "warning");
+        return;
+      }
+
+      if (!/^[0-9]{10}$/.test(mobile)) {
+        showToast("Mobile number must be a 10-digit number", "error");
+        return;
+      }
+
+      saveBtn.disabled = true;
+      saveBtn.textContent = "Updating Profile...";
+
+      try {
+        await Api.updateProfile({ fullName, mobile, address });
+        showToast("Profile details updated successfully!", "success");
+        closeProfileEditModal();
+        await loadUserProfile();
+      } catch (err) {
+        showToast(err.message || "Failed to update profile", "error");
+      } finally {
+        saveBtn.disabled = false;
+        saveBtn.textContent = "Save & Update Profile Details";
+      }
+    }
+
+    async function loadStats() {
+      try {
+        const res = await Api.getBorrowerStats();
+        const s = res.data;
+        document.getElementById("kpi-available-tools").textContent = s.availableTools;
+        document.getElementById("kpi-pending-requests").textContent = s.pendingRequests;
+        document.getElementById("kpi-active-loans").textContent = s.activeLoans;
+        document.getElementById("kpi-completed-loans").textContent = s.completedLoans;
+        document.getElementById("kpi-total-fines").textContent = `₹${s.totalFines}`;
+      } catch (err) {
+        console.error(err);
+      }
+    }
+
+    let allBorrowerRequests = [];
+    let selectedRequestForReturn = null;
+
+    function formatDateTime(dtStr) {
+      if (!dtStr) return '--';
+      const d = new Date(dtStr);
+      if (isNaN(d.getTime())) return dtStr.replace('T', ' ');
+      return d.toLocaleString('en-IN', {
+        day: 'numeric',
+        month: 'short',
+        year: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit',
+        hour12: true
+      });
+    }
+
+    function computeLiveTracking(req) {
+      if (!req.expectedReturnTime) {
+        return { 
+          badge: '<span class="countdown-badge on-time">Active</span>', 
+          penaltyHtml: '<span class="penalty-zero">₹0.00</span>', 
+          penalty: 0, 
+          totalPayable: Number(req.totalAmount || 0), 
+          isOverdue: false, 
+          lateMinutes: 0 
+        };
+      }
+
+      const now = new Date();
+      const exp = new Date(req.expectedReturnTime);
+      const diffMs = now - exp;
+      const lateMinutes = Math.floor(diffMs / 60000);
+
+      let badge = '';
+      let penalty = 0;
+      let penaltyHtml = '';
+      let isOverdue = false;
+
+      if (lateMinutes <= 0) {
+        // Still within rental duration
+        const remainingMinutes = Math.abs(lateMinutes);
+        const hrs = Math.floor(remainingMinutes / 60);
+        const mins = remainingMinutes % 60;
+        const timeStr = hrs > 0 ? `${hrs}h ${mins}m left` : `${mins}m left`;
+        badge = `<span class="countdown-badge on-time" title="Scheduled to return on-time">🟢 ${timeStr} (On-Time)</span>`;
+        penaltyHtml = `<span class="penalty-zero">₹0.00</span><span class="penalty-note">No penalty (Active)</span>`;
+      } else if (lateMinutes <= 30) {
+        // Within 30-minute grace window!
+        isOverdue = true;
+        badge = `<span class="countdown-badge grace" title="Delay within 30m grace window">⚠️ Overdue: ${lateMinutes}m</span><div style="font-size:0.72rem; color:#b45309; font-weight:700;">Within 30m Grace (Free)</div>`;
+        penaltyHtml = `<span class="penalty-zero">₹0.00</span><span class="penalty-note">30m grace applied</span>`;
+      } else {
+        // Exceeded 30-minute grace window!
+        isOverdue = true;
+        const chargeableMinutes = lateMinutes - 30;
+        if (req.rentalType === 'HOURLY') {
+          const chargeableHours = Math.max(1, Math.ceil(chargeableMinutes / 60));
+          penalty = chargeableHours * 10; // default ₹10/hr
+        } else {
+          const chargeableDays = Math.max(1, Math.ceil(chargeableMinutes / 1440));
+          penalty = chargeableDays * 50; // default ₹50/day
+        }
+        if (req.currentPenalty !== undefined && req.currentPenalty !== null && req.currentPenalty > 0) {
+          penalty = Number(req.currentPenalty);
+        }
+        const hrs = Math.floor(lateMinutes / 60);
+        const mins = lateMinutes % 60;
+        const lateStr = hrs > 0 ? `${hrs}h ${mins}m` : `${mins}m`;
+        badge = `<span class="countdown-badge overdue" title="Exceeded 30m grace window">🚨 Overdue: ${lateStr}</span><div style="font-size:0.72rem; color:#b91c1c; font-weight:700;">30m Grace Exceeded</div>`;
+        penaltyHtml = `<span class="penalty-active">+₹${penalty.toFixed(2)}</span><span class="penalty-note">Late fee after 30m grace</span>`;
+      }
+
+      const basePrice = Number(req.totalAmount || 0);
+      const totalPayable = basePrice + penalty;
+      return { badge, penalty, penaltyHtml, lateMinutes, isOverdue, totalPayable };
+    }
+
+    async function loadMyRequests() {
+      try {
+        const res = await Api.getMyRequests();
+        allBorrowerRequests = res.data || [];
+
+        renderActiveBorrowings();
+        renderBorrowerHistory();
+      } catch (err) {
+        document.getElementById("history-table-body").innerHTML = `<tr><td colspan="7" style="color:red;">Error loading requests: ${err.message}</td></tr>`;
+      }
+    }
+
+    function renderActiveBorrowings() {
+      const activeTbody = document.getElementById("active-borrowings-body");
+      const active = allBorrowerRequests.filter(r => r.status === 'APPROVED' || r.status === 'ACTIVE');
+      document.getElementById("active-borrowings-badge").textContent = `${active.length} Active Loans`;
+
+      if (active.length === 0) {
+        activeTbody.innerHTML = `<tr><td colspan="6" style="text-align:center; color:#888; padding:28px;">You currently have no tools checked out. <a href="index.html" style="color:var(--accent-blue); font-weight:700;">Browse tools to rent!</a></td></tr>`;
+        return;
+      }
+
+      activeTbody.innerHTML = active.map(r => {
+        const tracking = computeLiveTracking(r);
+        return `
+          <tr>
+            <td>
+              <div style="display:flex; align-items:center; gap:10px;">
+                <img src="${r.toolImageUrl ? encodeURI(r.toolImageUrl) : ''}" style="width:48px; height:48px; object-fit:cover; border-radius:6px; border:1px solid #e2e8f0;" onerror="this.src='https://images.unsplash.com/photo-1504148455328-c376907d081c?auto=format&fit=crop&w=800&q=80'">
+                <div>
+                  <strong style="font-size:0.92rem; color:#0f172a;">${r.toolName}</strong>
+                  <div style="font-size:0.75rem; color:#64748b;">${r.toolCategory || 'Tool'} &bull; ID: #${r.toolId}</div>
+                </div>
+              </div>
+            </td>
+            <td>
+              <div class="contact-detail-box">
+                <span class="contact-name">🛠️ ${r.lenderName || 'Lender'}</span>
+                ${r.lenderCompany ? `<span class="contact-company">🏢 ${r.lenderCompany}</span>` : ''}
+                ${r.lenderMobile ? `<a class="contact-phone" href="tel:${r.lenderMobile}">📞 +91 ${r.lenderMobile}</a>` : '<small style="color:#888;">No phone listed</small>'}
+                ${r.lenderAddress ? `<span class="contact-address" title="${r.lenderAddress}">📍 ${r.lenderAddress}</span>` : '<span class="contact-address">📍 Workshop location on file</span>'}
+                ${r.lenderEmail ? `<span style="font-size:0.72rem; color:#64748b;">✉️ ${r.lenderEmail}</span>` : ''}
+              </div>
+            </td>
+            <td>
+              <div class="time-tracker-block">
+                <div class="time-row" title="Time of Rent">
+                  <span class="time-icon">🚀</span>
+                  <span><strong>Rent Start:</strong> ${formatDateTime(r.startTime)}</span>
+                </div>
+                <div class="time-row" title="Ending of Rented Time">
+                  <span class="time-icon">🏁</span>
+                  <span><strong>Due Return:</strong> ${formatDateTime(r.expectedReturnTime)}</span>
+                </div>
+                <div style="margin-top:2px;">
+                  <span class="role-pill" style="background:#f1f5f9; color:#334155; font-size:0.74rem;">${r.rentalType} (${r.duration} ${r.rentalType === 'HOURLY' ? 'Hours' : 'Days'})</span>
+                </div>
+              </div>
+            </td>
+            <td>
+              <div style="display:flex; flex-direction:column; gap:4px;">
+                ${tracking.badge}
+              </div>
+            </td>
+            <td>
+              <div class="penalty-cell">
+                <div><strong>Rented Price:</strong> <span style="color:var(--price-color); font-weight:800;">₹${r.totalAmount}</span></div>
+                <div style="margin-top:2px;">
+                  <strong>Late Penalty:</strong>
+                  ${tracking.penaltyHtml}
+                </div>
+                <div style="font-size:0.78rem; font-weight:700; color:#0f172a; margin-top:2px;">
+                  Total: ₹${tracking.totalPayable.toFixed(2)}
+                </div>
+              </div>
+            </td>
+            <td>
+              <button class="btn-primary" style="padding:7px 14px; font-size:0.83rem; font-weight:700; white-space:nowrap;" onclick="openReturnModal(${r.id})">
+                Return Tool Now
+              </button>
+            </td>
+          </tr>
+        `;
+      }).join("");
+    }
+
+    function renderBorrowerHistory() {
+      const histTbody = document.getElementById("history-table-body");
+      if (allBorrowerRequests.length === 0) {
+        histTbody.innerHTML = `<tr><td colspan="7" style="text-align:center; color:#888; padding:20px;">No requests found yet</td></tr>`;
+        return;
+      }
+
+      histTbody.innerHTML = allBorrowerRequests.map(r => {
+        const isCompleted = r.status === 'COMPLETED';
+        const isPending = r.status === 'PENDING';
+        const fine = Number(r.fineAmount || 0);
+        const base = Number(r.totalAmount || 0);
+        const total = base + fine;
+
+        return `
+          <tr>
+            <td>
+              <div style="display:flex; align-items:center; gap:8px;">
+                <img src="${r.toolImageUrl ? encodeURI(r.toolImageUrl) : ''}" style="width:38px; height:38px; object-fit:cover; border-radius:4px;" onerror="this.src='https://images.unsplash.com/photo-1504148455328-c376907d081c?auto=format&fit=crop&w=800&q=80'">
+                <div>
+                  <strong>${r.toolName}</strong>
+                  <div class="contact-detail-box" style="margin-top:3px;">
+                    <span style="font-size:0.75rem; color:#64748b;">Lender: <strong>${r.lenderName || 'N/A'}</strong> ${r.lenderMobile ? `(&#128222; ${r.lenderMobile})` : ''}</span>
+                    ${r.lenderAddress ? `<span style="font-size:0.72rem; color:#64748b;">📍 ${r.lenderAddress}</span>` : ''}
+                  </div>
+                </div>
+              </div>
+            </td>
+            <td>
+              <div style="font-size:0.78rem;">
+                <div>Start: ${formatDateTime(r.startTime)}</div>
+                <div>Due: ${formatDateTime(r.expectedReturnTime)}</div>
+                ${r.actualReturnTime ? `<div>Returned: <strong style="color:#059669;">${formatDateTime(r.actualReturnTime)}</strong></div>` : ''}
+              </div>
+            </td>
+            <td><span class="role-pill" style="font-size:0.74rem;">${r.rentalType} (${r.duration})</span></td>
+            <td><strong>₹${base.toFixed(2)}</strong></td>
+            <td>
+              ${fine > 0 
+                ? `<span class="penalty-active" title="Charged after 30-min grace">+₹${fine.toFixed(2)}</span>` 
+                : `<span class="penalty-zero" title="On-time or within 30m grace">₹0.00</span>`}
+            </td>
+            <td>
+              <span class="status-badge ${r.status === 'COMPLETED' ? 'available' : (r.status === 'PENDING' ? 'borrowed' : '')}" style="position:static;">
+                ${r.status}
+              </span>
+            </td>
+            <td>
+              ${isPending ? `
+                <button class="btn-secondary" style="padding:4px 8px; font-size:0.8rem;" onclick="cancelRequest(${r.id})">Cancel</button>
+              ` : ''}
+              ${isCompleted ? `
+                <button class="btn-primary" style="padding:4px 8px; font-size:0.8rem;" onclick="openReviewModal(${r.toolId}, ${r.id}, '${r.toolName.replace(/'/g, "\\'")}')">★ Leave Review</button>
+              ` : ''}
+            </td>
+          </tr>
+        `;
+      }).join("");
+    }
+
+    function openReturnModal(requestId) {
+      selectedRequestForReturn = allBorrowerRequests.find(r => r.id === requestId);
+      if (!selectedRequestForReturn) return;
+
+      const r = selectedRequestForReturn;
+      const tracking = computeLiveTracking(r);
+      const now = new Date();
+
+      const container = document.getElementById("return-modal-content");
+      container.innerHTML = `
+        <div style="display:flex; gap:14px; align-items:center; background:#f8fafc; padding:12px; border-radius:8px; border:1px solid #e2e8f0; margin-bottom:14px;">
+          <img src="${r.toolImageUrl ? encodeURI(r.toolImageUrl) : ''}" style="width:56px; height:56px; object-fit:cover; border-radius:6px;" onerror="this.src='https://images.unsplash.com/photo-1504148455328-c376907d081c?auto=format&fit=crop&w=800&q=80'">
+          <div>
+            <h4 style="margin:0; font-size:1.05rem; color:#0f172a;">${r.toolName}</h4>
+            <div style="font-size:0.8rem; color:#64748b;">${r.toolCategory || 'Tool'} &bull; Loan #${r.id}</div>
+          </div>
+        </div>
+
+        <div style="margin-bottom:14px; padding:12px; background:#fff; border:1px solid #e2e8f0; border-radius:8px;">
+          <div style="font-size:0.75rem; color:#64748b; font-weight:800; text-transform:uppercase; margin-bottom:6px;">Lender Drop-off & Handover Details</div>
+          <div style="font-weight:700; font-size:0.95rem; color:#0f172a;">🛠️ ${r.lenderName || 'Lender'} ${r.lenderCompany ? `(${r.lenderCompany})` : ''}</div>
+          <div style="font-size:0.86rem; color:#0284c7; margin-top:3px;">
+            <a href="tel:${r.lenderMobile}" style="color:inherit; text-decoration:none; font-weight:700;">📞 +91 ${r.lenderMobile || 'N/A'}</a>
+          </div>
+          <div style="font-size:0.83rem; color:#334155; margin-top:3px;">
+            📍 <strong>Workshop Address:</strong> ${r.lenderAddress || 'Workshop location on file'}
+          </div>
+        </div>
+
+        <div class="settlement-sheet">
+          <div style="font-size:0.75rem; color:#64748b; font-weight:800; text-transform:uppercase; margin-bottom:10px;">Return Settlement & 30-Min Penalty Summary</div>
+          <div class="settlement-row">
+            <span>🚀 Time of Rent (Start):</span>
+            <strong>${formatDateTime(r.startTime)}</strong>
+          </div>
+          <div class="settlement-row">
+            <span>🏁 Scheduled Return Deadline:</span>
+            <strong>${formatDateTime(r.expectedReturnTime)}</strong>
+          </div>
+          <div class="settlement-row">
+            <span>🕒 Current Return Time:</span>
+            <strong style="color:#0284c7;">${formatDateTime(now.toISOString())}</strong>
+          </div>
+          <div class="settlement-row">
+            <span>💵 Agreed Rented Price:</span>
+            <strong>₹${Number(r.totalAmount || 0).toFixed(2)}</strong>
+          </div>
+          <div class="settlement-row">
+            <span>🛡️ 30-Minute Grace Window:</span>
+            <span style="color:#16a34a; font-weight:700;">Applied (First 30m Late = Free)</span>
+          </div>
+          <div class="settlement-row">
+            <span>⚠️ Late Return Penalty:</span>
+            <strong style="${tracking.penalty > 0 ? 'color:#dc2626; font-size:1rem;' : 'color:#16a34a;'}">
+              ${tracking.penalty > 0 ? `+₹${tracking.penalty.toFixed(2)}` : '₹0.00 (Within 30m Grace / On-Time)'}
+            </strong>
+          </div>
+          <div class="settlement-row total-row">
+            <span>Total Payable to Lender:</span>
+            <span style="color:#b12704; font-size:1.25rem;">₹${tracking.totalPayable.toFixed(2)}</span>
+          </div>
+        </div>
+      `;
+
+      document.getElementById("return-tool-modal").classList.add("active");
+    }
+
+    function closeReturnModal() {
+      document.getElementById("return-tool-modal").classList.remove("active");
+      selectedRequestForReturn = null;
+    }
+
+    async function executeBorrowerReturn() {
+      if (!selectedRequestForReturn) return;
+      const btn = document.getElementById("confirm-return-btn");
+      btn.disabled = true;
+      btn.textContent = "Submitting Return...";
+
+      try {
+        const res = await Api.returnTool(selectedRequestForReturn.id);
+        const fine = res.data && res.data.fineAmount ? res.data.fineAmount : 0;
+        if (fine > 0) {
+          showToast(`Tool returned! Late fee applied: ₹${fine}`, "info");
+        } else {
+          showToast("Tool returned successfully within deadline / 30m grace! Thank you.", "success");
+        }
+        closeReturnModal();
+        await loadDashboard();
+      } catch (err) {
+        showToast(err.message || "Failed to return tool", "error");
+      } finally {
+        btn.disabled = false;
+        btn.textContent = "✓ Confirm Tool Return";
+      }
+    }
+
+    async function returnTool(id) {
+      openReturnModal(id);
+    }
+
+    async function cancelRequest(id) {
+      if (!confirm("Are you sure you want to cancel this pending borrow request?")) return;
+      try {
+        await Api.cancelRequest(id);
+        showToast("Borrow request cancelled", "info");
+        loadDashboard();
+      } catch (err) {
+        showToast(err.message, "error");
+      }
+    }
+
+    // Reviews
+    function openReviewModal(toolId, reqId, toolName) {
+      document.getElementById("rev-tool-id").value = toolId;
+      document.getElementById("rev-request-id").value = reqId;
+      document.getElementById("review-modal-title").textContent = `Review: ${toolName}`;
+      document.getElementById("rev-comment").value = "";
+      document.getElementById("review-modal").classList.add("active");
+    }
+
+    function closeReviewModal() {
+      document.getElementById("review-modal").classList.remove("active");
+    }
+
+    async function submitReview() {
+      const toolId = parseInt(document.getElementById("rev-tool-id").value);
+      const borrowRequestId = parseInt(document.getElementById("rev-request-id").value);
+      const rating = parseInt(document.getElementById("rev-rating").value);
+      const comment = document.getElementById("rev-comment").value.trim();
+
+      if (!comment) {
+        showToast("Please enter a review comment", "error");
+        return;
+      }
+
+      try {
+        await Api.addReview({ toolId, borrowRequestId, rating, comment });
+        showToast("Review submitted successfully! Thank you for your feedback.", "success");
+        closeReviewModal();
+      } catch (err) {
+        showToast(err.message, "error");
+      }
+    }
+
+    async function submitSuggestion() {
+      const subject = document.getElementById("sugg-subject").value.trim();
+      const message = document.getElementById("sugg-message").value.trim();
+      if (!subject || !message) {
+        showToast("Please enter both subject and message", "error");
+        return;
+      }
+      try {
+        await Api.createSuggestion({ subject, message });
+        showToast("Feedback sent to administrators!", "success");
+        document.getElementById("sugg-subject").value = "";
+        document.getElementById("sugg-message").value = "";
+      } catch (err) {
+        showToast(err.message, "error");
+      }
+    }
+
+    document.addEventListener("DOMContentLoaded", () => {
+      loadDashboard();
+      setInterval(() => {
+        if (allBorrowerRequests && allBorrowerRequests.length > 0) {
+          renderActiveBorrowings();
+        }
+      }, 30000);
+    });
+  </script>
+</body>
+</html>

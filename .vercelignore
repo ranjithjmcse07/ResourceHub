@@ -1,0 +1,16 @@
+# Vercel Deployment Ignore Rules
+# Excludes backend source, build artifacts, and heavy assets
+
+backend/
+target/
+.mvn/
+mvnw
+mvnw.cmd
+pom.xml
+database/
+*.sql
+*.md
+!README.md
+.vscode/
+"Hand tools"/
+"ToolShare _ Images"/
