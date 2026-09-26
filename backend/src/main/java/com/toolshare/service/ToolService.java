@@ -118,4 +118,8 @@ public class ToolService {
     public List<String> getDistinctCities() {
         return toolDao.getDistinctCities();
     }
+
+    public List<String> getDistinctCategories() {
+        return toolDao.getDistinctCategories();
+    }
 }

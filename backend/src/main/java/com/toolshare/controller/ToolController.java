@@ -44,6 +44,12 @@ public class ToolController {
         return ResponseEntity.ok(ApiResponse.ok("Cities retrieved successfully", cities));
     }
 
+    @GetMapping("/categories")
+    public ResponseEntity<ApiResponse<List<String>>> getCategories() {
+        List<String> categories = toolService.getDistinctCategories();
+        return ResponseEntity.ok(ApiResponse.ok("Categories retrieved successfully", categories));
+    }
+
     @GetMapping("/{id}")
     public ResponseEntity<ApiResponse<Tool>> getToolById(@PathVariable Long id) {
         Tool tool = toolService.getToolById(id);

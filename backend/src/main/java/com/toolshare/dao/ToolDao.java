@@ -256,4 +256,9 @@ public class ToolDao {
                      "ORDER BY city ASC";
         return jdbcTemplate.queryForList(sql, String.class);
     }
+
+    public List<String> getDistinctCategories() {
+        String sql = "SELECT DISTINCT category FROM tools WHERE availability_status != 'INACTIVE' ORDER BY category ASC";
+        return jdbcTemplate.queryForList(sql, String.class);
+    }
 }

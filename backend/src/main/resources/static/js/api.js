@@ -275,13 +275,63 @@ const Api = {
   },
 
   // Tools Endpoints
-  getTools(params = {}) {
+  async getTools(params = {}) {
     const query = new URLSearchParams(params).toString();
-    return this.request(`/tools${query ? `?${query}` : ""}`);
+    try {
+      const res = await this.request(`/tools${query ? `?${query}` : ""}`);
+      return res;
+    } catch (err) {
+      if (typeof window !== "undefined" && window.__FALLBACK_TOOLS__ && Array.isArray(window.__FALLBACK_TOOLS__)) {
+        console.warn("Backend offline or unreachable, using cloud fallback dataset:", err.message);
+        let list = [...window.__FALLBACK_TOOLS__];
+        if (params.category && params.category !== "All") {
+          list = list.filter(t => (t.category || "").toLowerCase() === params.category.toLowerCase());
+        }
+        if (params.city && params.city !== "All Cities") {
+          list = list.filter(t => (t.location || "").toLowerCase().includes(params.city.toLowerCase()));
+        }
+        if (params.locality) {
+          list = list.filter(t => (t.location || "").toLowerCase().includes(params.locality.toLowerCase()));
+        }
+        if (params.condition && params.condition !== "All") {
+          list = list.filter(t => (t.toolCondition || "").toLowerCase() === params.condition.toLowerCase());
+        }
+        if (params.maxRate) {
+          const max = parseFloat(params.maxRate);
+          if (!isNaN(max)) {
+            list = list.filter(t => Number(t.dailyRate) <= max);
+          }
+        }
+        if (params.search || params.q) {
+          const q = (params.search || params.q).toLowerCase();
+          list = list.filter(t => (t.toolName || "").toLowerCase().includes(q) || (t.description || "").toLowerCase().includes(q));
+        }
+        return {
+          success: true,
+          message: "Tools retrieved (Cloud Standalone)",
+          isFallback: true,
+          data: {
+            content: list,
+            totalElements: list.length
+          }
+        };
+      }
+      throw err;
+    }
   },
 
-  getToolById(id) {
-    return this.request(`/tools/${id}`);
+  async getToolById(id) {
+    try {
+      return await this.request(`/tools/${id}`);
+    } catch (err) {
+      if (typeof window !== "undefined" && window.__FALLBACK_TOOLS__) {
+        const found = window.__FALLBACK_TOOLS__.find(t => String(t.id) === String(id));
+        if (found) {
+          return { success: true, isFallback: true, data: found };
+        }
+      }
+      throw err;
+    }
   },
 
   createTool(toolData) {
@@ -304,15 +354,23 @@ const Api = {
     });
   },
 
-  getCategories() {
-    return this.request("/tools/categories");
+  async getCategories() {
+    try {
+      return await this.request("/tools/categories");
+    } catch (err) {
+      if (typeof window !== "undefined" && window.__FALLBACK_TOOLS__) {
+        const cats = [...new Set(window.__FALLBACK_TOOLS__.map(t => t.category).filter(Boolean))].sort();
+        return { success: true, data: cats };
+      }
+      throw err;
+    }
   },
 
   searchTools(query, category) {
     const params = new URLSearchParams();
     if (query) params.append("q", query);
     if (category && category !== "All") params.append("category", category);
-    return this.request(`/tools/search?${params.toString()}`);
+    return this.getTools({ search: query, category });
   },
 
   // Borrow Request Endpoints
