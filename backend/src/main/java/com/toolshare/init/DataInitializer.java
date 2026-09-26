@@ -52,6 +52,17 @@ public class DataInitializer implements CommandLineRunner {
         try {
             log.info("Executing table creation checks...");
 
+            try {
+                jdbcTemplate.execute("CREATE DATABASE IF NOT EXISTS toolshare");
+                jdbcTemplate.execute("USE toolshare");
+                log.info("Target database selected: toolshare");
+            } catch (Exception e) {
+                try {
+                    jdbcTemplate.execute("USE test");
+                    log.info("Target database selected: test");
+                } catch (Exception ignored) {}
+            }
+
             jdbcTemplate.execute("""
                 CREATE TABLE IF NOT EXISTS users (
                     id BIGINT AUTO_INCREMENT PRIMARY KEY,

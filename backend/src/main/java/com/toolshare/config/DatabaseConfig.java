@@ -55,7 +55,7 @@ public class DatabaseConfig {
                 String host = uri.getHost();
                 int port = uri.getPort() == -1 ? 3306 : uri.getPort();
                 String path = uri.getPath();
-                if (path == null || path.isBlank() || path.equals("/")) {
+                if (path == null || path.isBlank() || path.equals("/") || path.equalsIgnoreCase("/sys") || path.equalsIgnoreCase("/mysql") || path.equalsIgnoreCase("/information_schema") || path.equalsIgnoreCase("/performance_schema")) {
                     path = "/test";
                 }
                 String query = uri.getQuery();
