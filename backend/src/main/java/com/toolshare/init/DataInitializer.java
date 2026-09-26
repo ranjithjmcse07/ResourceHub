@@ -7,9 +7,12 @@ import com.toolshare.model.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.CommandLineRunner;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.jdbc.datasource.init.ResourceDatabasePopulator;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
+import javax.sql.DataSource;
 import java.math.BigDecimal;
 
 @Component
@@ -17,11 +20,13 @@ public class DataInitializer implements CommandLineRunner {
 
     private static final Logger log = LoggerFactory.getLogger(DataInitializer.class);
 
+    private final DataSource dataSource;
     private final UserDao userDao;
     private final ToolDao toolDao;
     private final PasswordEncoder passwordEncoder;
 
-    public DataInitializer(UserDao userDao, ToolDao toolDao, PasswordEncoder passwordEncoder) {
+    public DataInitializer(DataSource dataSource, UserDao userDao, ToolDao toolDao, PasswordEncoder passwordEncoder) {
+        this.dataSource = dataSource;
         this.userDao = userDao;
         this.toolDao = toolDao;
         this.passwordEncoder = passwordEncoder;
@@ -29,58 +34,93 @@ public class DataInitializer implements CommandLineRunner {
 
     @Override
     public void run(String... args) {
-        log.info("Checking database initialization...");
+        log.info("Checking database schema and initialization...");
 
-        // 1. Seed demo users if empty
-        if (!userDao.existsByUsername("admin")) {
-            User admin = new User();
-            admin.setFullName("Ranjith J M");
-            admin.setUsername("admin");
-            admin.setEmail("admin@toolshare.com");
-            admin.setMobile("9876543210");
-            admin.setPassword(passwordEncoder.encode("ranjith567"));
-            admin.setRole("ADMIN");
-            admin.setActive(true);
-            userDao.createUser(admin);
-            log.info("Created default ADMIN user: admin / ranjith567");
+        // 1. Ensure database schema is created before running any queries
+        try {
+            ResourceDatabasePopulator populator = new ResourceDatabasePopulator();
+            populator.addScript(new ClassPathResource("schema.sql"));
+            populator.setContinueOnError(true);
+            populator.setIgnoreFailedDrops(true);
+            populator.execute(dataSource);
+            log.info("Database schema checked/created successfully.");
+        } catch (Exception e) {
+            log.warn("Notice during schema setup: {}", e.getMessage());
         }
 
+        // 2. Seed demo users if empty
         User lender = null;
-        if (!userDao.existsByUsername("lender1")) {
-            lender = new User();
-            lender.setFullName("Ranjith Tools & Equipment");
-            lender.setUsername("lender1");
-            lender.setEmail("lender@toolshare.com");
-            lender.setMobile("9876543211");
-            lender.setPassword(passwordEncoder.encode("lender123"));
-            lender.setRole("LENDER");
-            lender.setCompanyName("Chennai ToolWorks Ltd.");
-            lender.setAddress("12 Anna Salai, Chennai, Tamil Nadu");
-            lender.setActive(true);
-            lender = userDao.createUser(lender);
-            log.info("Created default LENDER user: lender1 / lender123");
-        } else {
-            lender = userDao.findByUsername("lender1").orElse(null);
+        try {
+            if (!userDao.existsByUsername("admin")) {
+                User admin = new User();
+                admin.setFullName("Ranjith J M");
+                admin.setUsername("admin");
+                admin.setEmail("admin@toolshare.com");
+                admin.setMobile("9876543210");
+                admin.setPassword(passwordEncoder.encode("ranjith567"));
+                admin.setRole("ADMIN");
+                admin.setActive(true);
+                userDao.createUser(admin);
+                log.info("Created default ADMIN user: admin / ranjith567");
+            }
+
+            if (!userDao.existsByUsername("lender1")) {
+                lender = new User();
+                lender.setFullName("Ranjith Tools & Equipment");
+                lender.setUsername("lender1");
+                lender.setEmail("lender@toolshare.com");
+                lender.setMobile("9876543211");
+                lender.setPassword(passwordEncoder.encode("lender123"));
+                lender.setRole("LENDER");
+                lender.setCompanyName("Chennai ToolWorks Ltd.");
+                lender.setAddress("12 Anna Salai, Chennai, Tamil Nadu");
+                lender.setActive(true);
+                lender = userDao.createUser(lender);
+                log.info("Created default LENDER user: lender1 / lender123");
+            } else {
+                lender = userDao.findByUsername("lender1").orElse(null);
+            }
+
+            if (!userDao.existsByUsername("borrower1")) {
+                User borrower = new User();
+                borrower.setFullName("Karthik DIY Builder");
+                borrower.setUsername("borrower1");
+                borrower.setEmail("borrower@toolshare.com");
+                borrower.setMobile("9876543212");
+                borrower.setPassword(passwordEncoder.encode("borrower123"));
+                borrower.setRole("BORROWER");
+                borrower.setAddress("45 North Usman Road, T.Nagar, Chennai");
+                borrower.setActive(true);
+                userDao.createUser(borrower);
+                log.info("Created default BORROWER user: borrower1 / borrower123");
+            }
+        } catch (Exception e) {
+            log.warn("Notice during user seeding: {}", e.getMessage());
         }
 
-        if (!userDao.existsByUsername("borrower1")) {
-            User borrower = new User();
-            borrower.setFullName("Karthik DIY Builder");
-            borrower.setUsername("borrower1");
-            borrower.setEmail("borrower@toolshare.com");
-            borrower.setMobile("9876543212");
-            borrower.setPassword(passwordEncoder.encode("borrower123"));
-            borrower.setRole("BORROWER");
-            borrower.setAddress("45 North Usman Road, T.Nagar, Chennai");
-            borrower.setActive(true);
-            userDao.createUser(borrower);
-            log.info("Created default BORROWER user: borrower1 / borrower123");
+        // 3. Seed demo tools if empty
+        try {
+            if (toolDao.countAll() == 0) {
+                log.info("Seeding tools into database...");
+                try {
+                    ResourceDatabasePopulator dataPopulator = new ResourceDatabasePopulator();
+                    dataPopulator.addScript(new ClassPathResource("data.sql"));
+                    dataPopulator.setContinueOnError(true);
+                    dataPopulator.execute(dataSource);
+                    log.info("Tools seeded successfully from data.sql!");
+                } catch (Exception dataEx) {
+                    log.warn("data.sql execution note: {}, falling back to programmatic seed", dataEx.getMessage());
+                    seedFallbackTools(lender);
+                }
+            }
+        } catch (Exception e) {
+            log.warn("Notice during tools seeding: {}", e.getMessage());
         }
+    }
 
-        // 2. Seed demo tools if empty
-        if (toolDao.countAll() == 0 && lender != null) {
-            log.info("Seeding Amazon-style sample tools with dual hourly and daily rates...");
-
+    private void seedFallbackTools(User lender) {
+        if (lender == null) return;
+        try {
             toolDao.createTool(new Tool(null, lender.getId(),
                     "Bosch Professional 18V Cordless Hammer Drill",
                     "Power Tools",
@@ -169,7 +209,9 @@ public class DataInitializer implements CommandLineRunner {
                     "https://images.unsplash.com/photo-1486006920555-c77dce18193b?auto=format&fit=crop&w=800&q=80",
                     "AVAILABLE", null, null));
 
-            log.info("Sample tools seeded successfully!");
+            log.info("Fallback sample tools seeded successfully!");
+        } catch (Exception e) {
+            log.warn("Notice during fallback tool seed: {}", e.getMessage());
         }
     }
 }
