@@ -83,11 +83,11 @@ public class ToolDao {
 
     private static final String BASE_TOOL_QUERY = 
         "SELECT t.*, u.full_name AS lender_name, u.company_name, u.mobile AS lender_mobile, u.address AS lender_address, u.email AS lender_email, " +
-        "COALESCE(AVG(r.rating), 0) AS avg_rating, " +
-        "COUNT(r.id) AS review_count " +
+        "COALESCE(r.avg_rating, 0) AS avg_rating, " +
+        "COALESCE(r.review_count, 0) AS review_count " +
         "FROM tools t " +
         "JOIN users u ON t.lender_id = u.id " +
-        "LEFT JOIN reviews r ON t.id = r.tool_id ";
+        "LEFT JOIN (SELECT tool_id, AVG(rating) AS avg_rating, COUNT(id) AS review_count FROM reviews GROUP BY tool_id) r ON t.id = r.tool_id ";
 
     public Tool createTool(Tool tool) {
         String sql = "INSERT INTO tools (lender_id, tool_name, category, description, tool_condition, location, " +
@@ -141,7 +141,7 @@ public class ToolDao {
     }
 
     public Optional<Tool> findById(Long id) {
-        String sql = BASE_TOOL_QUERY + "WHERE t.id = ? GROUP BY t.id, u.id";
+        String sql = BASE_TOOL_QUERY + "WHERE t.id = ?";
         try {
             Tool tool = jdbcTemplate.queryForObject(sql, toolRowMapper, id);
             return Optional.ofNullable(tool);
@@ -151,7 +151,7 @@ public class ToolDao {
     }
 
     public List<Tool> findByLenderId(Long lenderId) {
-        String sql = BASE_TOOL_QUERY + "WHERE t.lender_id = ? GROUP BY t.id, u.id ORDER BY t.id DESC";
+        String sql = BASE_TOOL_QUERY + "WHERE t.lender_id = ? ORDER BY t.id DESC";
         return jdbcTemplate.query(sql, toolRowMapper, lenderId);
     }
 
@@ -200,8 +200,6 @@ public class ToolDao {
             sql.append("AND t.availability_status != 'INACTIVE' ");
         }
 
-        sql.append("GROUP BY t.id, u.id ");
-
         // Sorting
         if ("price_asc".equalsIgnoreCase(sortBy)) {
             sql.append("ORDER BY t.daily_rate ASC ");
@@ -248,11 +246,9 @@ public class ToolDao {
     }
 
     public List<String> getDistinctCities() {
-        String sql = "SELECT DISTINCT " +
-                     "TRIM(SUBSTRING_INDEX(location, '-', 1)) AS city " +
+        String sql = "SELECT DISTINCT TRIM(SUBSTRING_INDEX(location, '-', 1)) AS city " +
                      "FROM tools " +
                      "WHERE availability_status != 'INACTIVE' " +
-                     "GROUP BY city " +
                      "ORDER BY city ASC";
         return jdbcTemplate.queryForList(sql, String.class);
     }
