@@ -54,13 +54,13 @@ public class DataInitializer implements CommandLineRunner {
 
             try {
                 jdbcTemplate.execute("CREATE DATABASE IF NOT EXISTS toolshare");
+            } catch (Exception ignored) {}
+
+            try {
                 jdbcTemplate.execute("USE toolshare");
                 log.info("Target database selected: toolshare");
             } catch (Exception e) {
-                try {
-                    jdbcTemplate.execute("USE test");
-                    log.info("Target database selected: test");
-                } catch (Exception ignored) {}
+                log.info("Continuing with default connection database: {}", e.getMessage());
             }
 
             jdbcTemplate.execute("""

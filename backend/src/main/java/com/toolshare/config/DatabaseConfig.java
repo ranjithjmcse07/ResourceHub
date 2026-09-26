@@ -55,16 +55,19 @@ public class DatabaseConfig {
                 String host = uri.getHost();
                 int port = uri.getPort() == -1 ? 3306 : uri.getPort();
                 String path = uri.getPath();
-                if (path == null || path.isBlank() || path.equals("/") || path.equalsIgnoreCase("/sys") || path.equalsIgnoreCase("/mysql") || path.equalsIgnoreCase("/information_schema") || path.equalsIgnoreCase("/performance_schema")) {
-                    path = "/test";
+                if (path == null || path.isBlank() || path.equals("/") || path.equalsIgnoreCase("/sys") || path.equalsIgnoreCase("/mysql") || path.equalsIgnoreCase("/information_schema") || path.equalsIgnoreCase("/performance_schema") || path.equalsIgnoreCase("/test")) {
+                    path = "/toolshare";
                 }
                 String query = uri.getQuery();
 
                 String jdbcUrl = "jdbc:mysql://" + host + ":" + port + path;
                 if (query != null && !query.isBlank()) {
                     jdbcUrl += "?" + query;
+                    if (!jdbcUrl.contains("createDatabaseIfNotExist")) {
+                        jdbcUrl += "&createDatabaseIfNotExist=true";
+                    }
                 } else {
-                    jdbcUrl += "?sslMode=VERIFY_IDENTITY&useSSL=true&allowPublicKeyRetrieval=true";
+                    jdbcUrl += "?createDatabaseIfNotExist=true&sslMode=VERIFY_IDENTITY&useSSL=true&allowPublicKeyRetrieval=true";
                 }
 
                 config.setJdbcUrl(jdbcUrl);

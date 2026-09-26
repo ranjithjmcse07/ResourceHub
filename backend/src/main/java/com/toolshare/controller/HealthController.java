@@ -43,6 +43,9 @@ public class HealthController {
         try {
             res.put("status", "CONNECTED");
             res.put("database", jdbcTemplate.queryForObject("SELECT DATABASE()", String.class));
+            try {
+                res.put("databases", jdbcTemplate.queryForList("SHOW DATABASES", String.class));
+            } catch (Exception ignored) {}
             List<String> tables = jdbcTemplate.queryForList("SHOW TABLES", String.class);
             res.put("tables", tables);
             if (tables.contains("tools") || tables.contains("TOOLS")) {
