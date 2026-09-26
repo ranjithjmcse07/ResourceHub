@@ -177,7 +177,7 @@ public class BorrowRequestDao {
 
     public BigDecimal sumFinesByBorrower(Long borrowerId) {
         String sql = "SELECT COALESCE(SUM(fine_amount), 0) FROM borrow_requests WHERE borrower_id = ?";
-        return jdbcTemplate.queryForObject(sql, BigDecimal.class);
+        return jdbcTemplate.queryForObject(sql, BigDecimal.class, borrowerId);
     }
 
     public long countTotalTransactions() {

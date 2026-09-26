@@ -50,7 +50,7 @@ public class ToolController {
         return ResponseEntity.ok(ApiResponse.ok("Categories retrieved successfully", categories));
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/{id:[0-9]+}")
     public ResponseEntity<ApiResponse<Tool>> getToolById(@PathVariable Long id) {
         Tool tool = toolService.getToolById(id);
         return ResponseEntity.ok(ApiResponse.ok("Tool details retrieved", tool));

@@ -203,44 +203,64 @@ public class DataInitializer implements CommandLineRunner {
 
     private void seedToolsIfEmpty(User lender) {
         try {
-            if (toolDao.countAll() == 0) {
-                log.info("Tools table is empty, seeding catalog...");
-                boolean seededFromFile = false;
-
+            long count = toolDao.countAll();
+            if (count < 42) {
+                log.info("Tools table has {} items (< 42). Synchronizing full 42-tool inventory from data.sql...", count);
+                executeDataSql();
+            } else {
                 try {
-                    ClassPathResource dataRes = new ClassPathResource("data.sql");
-                    if (dataRes.exists()) {
-                        try (BufferedReader reader = new BufferedReader(new InputStreamReader(dataRes.getInputStream(), StandardCharsets.UTF_8))) {
-                            String line;
-                            StringBuilder sql = new StringBuilder();
-                            while ((line = reader.readLine()) != null) {
-                                String trimmed = line.trim();
-                                if (trimmed.isEmpty() || trimmed.startsWith("--") || trimmed.startsWith("USE ")) continue;
-                                sql.append(line).append(" ");
-                                if (trimmed.endsWith(";")) {
-                                    String statement = sql.toString().trim();
-                                    if (statement.endsWith(";")) {
-                                        statement = statement.substring(0, statement.length() - 1);
-                                    }
-                                    jdbcTemplate.execute(statement);
-                                    sql.setLength(0);
-                                    seededFromFile = true;
-                                }
-                            }
-                        }
+                    Integer legacyUnsplashCount = jdbcTemplate.queryForObject(
+                        "SELECT COUNT(*) FROM tools WHERE image_url LIKE '%unsplash%'", Integer.class);
+                    if (legacyUnsplashCount != null && legacyUnsplashCount > 0) {
+                        log.info("Found {} legacy tools with Unsplash URLs. Updating with official image assets...", legacyUnsplashCount);
+                        executeDataSql();
                     }
                 } catch (Exception ex) {
-                    log.warn("data.sql seed note: {}, falling back to programmatic seed", ex.getMessage());
+                    log.warn("Check for legacy Unsplash URLs: {}", ex.getMessage());
                 }
-
-                if (!seededFromFile || toolDao.countAll() == 0) {
-                    seedFallbackTools(lender);
-                }
-                log.info("Seeding complete. Total tools in database: {}", toolDao.countAll());
             }
+            log.info("Tools catalog check complete. Total tools in database: {}", toolDao.countAll());
         } catch (Exception e) {
             log.warn("Notice during tools seeding: {}", e.getMessage());
         }
+    }
+
+    public synchronized long executeDataSql() {
+        try {
+            ClassPathResource dataRes = new ClassPathResource("data.sql");
+            if (dataRes.exists()) {
+                log.info("Executing data.sql (all 42 tools with local image assets & dual pricing)...");
+                try (BufferedReader reader = new BufferedReader(new InputStreamReader(dataRes.getInputStream(), StandardCharsets.UTF_8))) {
+                    String line;
+                    StringBuilder sql = new StringBuilder();
+                    while ((line = reader.readLine()) != null) {
+                        String trimmed = line.trim();
+                        if (trimmed.isEmpty() || trimmed.startsWith("--") || trimmed.startsWith("USE ")) continue;
+                        sql.append(line).append(" ");
+                        if (trimmed.endsWith(";")) {
+                            String statement = sql.toString().trim();
+                            if (statement.endsWith(";")) {
+                                statement = statement.substring(0, statement.length() - 1);
+                            }
+                            jdbcTemplate.execute(statement);
+                            sql.setLength(0);
+                        }
+                    }
+                }
+                long count = toolDao.countAll();
+                log.info("Successfully executed data.sql. Total tools count: {}", count);
+                return count;
+            } else {
+                log.warn("data.sql not found on classpath, executing programmatic fallback...");
+                User lender = userDao.findByUsername("lender1").orElse(null);
+                seedFallbackTools(lender);
+            }
+        } catch (Exception ex) {
+            log.error("Failed to execute data.sql: {}", ex.getMessage(), ex);
+            User lender = userDao.findByUsername("lender1").orElse(null);
+            seedFallbackTools(lender);
+        }
+        return toolDao.countAll();
     }
 
     private void seedFallbackTools(User lender) {

@@ -63,6 +63,7 @@ const Api = {
 
   resetBaseUrl() {
     localStorage.removeItem("toolshare_api_base");
+    localStorage.removeItem("resourcehub_api_base");
     window.location.reload();
   },
 
@@ -310,10 +311,7 @@ const Api = {
           success: true,
           message: "Tools retrieved (Cloud Standalone)",
           isFallback: true,
-          data: {
-            content: list,
-            totalElements: list.length
-          }
+          data: list
         };
       }
       throw err;

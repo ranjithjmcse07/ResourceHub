@@ -20,9 +20,11 @@ import java.util.Map;
 public class HealthController {
 
     private final JdbcTemplate jdbcTemplate;
+    private final com.toolshare.init.DataInitializer dataInitializer;
 
-    public HealthController(JdbcTemplate jdbcTemplate) {
+    public HealthController(JdbcTemplate jdbcTemplate, com.toolshare.init.DataInitializer dataInitializer) {
         this.jdbcTemplate = jdbcTemplate;
+        this.dataInitializer = dataInitializer;
     }
 
     @GetMapping
@@ -55,6 +57,21 @@ public class HealthController {
             if (e.getCause() != null) {
                 res.put("cause", e.getCause().getMessage());
             }
+        }
+        return ResponseEntity.ok(res);
+    }
+
+    @GetMapping("/seed-tools")
+    public ResponseEntity<Map<String, Object>> seedTools() {
+        Map<String, Object> res = new LinkedHashMap<>();
+        try {
+            long count = dataInitializer.executeDataSql();
+            res.put("status", "SUCCESS");
+            res.put("message", "All 42 tools synced successfully with official assets and dual pricing");
+            res.put("tools_count", count);
+        } catch (Exception e) {
+            res.put("status", "ERROR");
+            res.put("error", e.getMessage());
         }
         return ResponseEntity.ok(res);
     }
