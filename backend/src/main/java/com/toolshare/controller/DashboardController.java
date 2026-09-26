@@ -23,7 +23,7 @@ public class DashboardController {
         this.dashboardService = dashboardService;
     }
 
-    @GetMapping("/lender")
+    @GetMapping({"/lender", "/lender/stats"})
     @PreAuthorize("hasRole('LENDER')")
     public ResponseEntity<ApiResponse<DashboardStatsDto>> getLenderStats(
             @AuthenticationPrincipal UserDetails userDetails
@@ -32,7 +32,7 @@ public class DashboardController {
         return ResponseEntity.ok(ApiResponse.ok("Lender dashboard stats retrieved", stats));
     }
 
-    @GetMapping("/borrower")
+    @GetMapping({"/borrower", "/borrower/stats"})
     @PreAuthorize("hasRole('BORROWER')")
     public ResponseEntity<ApiResponse<DashboardStatsDto>> getBorrowerStats(
             @AuthenticationPrincipal UserDetails userDetails
@@ -41,7 +41,7 @@ public class DashboardController {
         return ResponseEntity.ok(ApiResponse.ok("Borrower dashboard stats retrieved", stats));
     }
 
-    @GetMapping("/admin")
+    @GetMapping({"/admin", "/admin/stats"})
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<ApiResponse<Map<String, Object>>> getAdminStats() {
         Map<String, Object> stats = dashboardService.getAdminStats();
